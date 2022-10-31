@@ -31,7 +31,7 @@ jobs:
     - name: Lint
       run: |
         mypy harmony
-        flake8 harmony tests
+        flake8 harmony tests --max-line-length=88
         black harmony tests --check
         isort harmony tests --check-only --profile black
     - name: Test
