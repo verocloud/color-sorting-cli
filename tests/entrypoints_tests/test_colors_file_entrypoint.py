@@ -1,3 +1,4 @@
+import os
 from tempfile import mkstemp
 
 import pytest
@@ -5,6 +6,7 @@ from click.testing import Result
 from typer.testing import CliRunner
 
 from harmony.app import app
+from tests.helpers import get_temporary_file_path
 
 
 class TestColorsFileEntrypoint:
@@ -17,12 +19,10 @@ class TestColorsFileEntrypoint:
         arrangements = self._given_valid_file()
         results = self._when_file_is_sent(runner, arrangements)
         self._then_should_show_success_message(results, arrangements)
+        os.remove(arrangements)
 
     def _given_valid_file(self) -> str:
-        ABSOLUTE_PATH: int = 1
-        temporary_file = mkstemp()
-
-        return temporary_file[ABSOLUTE_PATH]
+        return get_temporary_file_path()
 
     def _then_should_show_success_message(self, results: Result, source_file: str):
         expected_exit_code = 0
