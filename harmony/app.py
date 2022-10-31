@@ -1,7 +1,7 @@
 import rich
 import typer
 
-from harmony.services import ColorExtractor, check_for_file_path, get_final_file_path
+from harmony.services import ColorExtractor, get_final_file_path
 
 app = typer.Typer(pretty_exceptions_show_locals=False)
 

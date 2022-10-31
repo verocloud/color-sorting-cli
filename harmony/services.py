@@ -1,6 +1,7 @@
 import os
 import re
 from typing import Iterator, List
+
 from harmony.exceptions import InvalidColorException, InvalidFileException
 from harmony.models import RGB, Color
 

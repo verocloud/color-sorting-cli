@@ -1,7 +1,8 @@
 import os
-import pytest
 from typing import Callable, List
-from harmony.exceptions import InvalidFileException
+
+import pytest
+
 from harmony.models import RGB, Color
 from harmony.services import ColorExtractor
 from tests.helpers import get_temporary_file_path

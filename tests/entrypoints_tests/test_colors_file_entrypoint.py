@@ -1,5 +1,4 @@
 import os
-from tempfile import mkstemp
 
 import pytest
 from click.testing import Result
