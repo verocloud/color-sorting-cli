@@ -51,18 +51,18 @@ class TestColorsSorter:
 
     def _then_should_sort(self, result: Tuple[Color]) -> None:
         expected_first_color = Color(
-            rgb=RGB(75, 214, 47),
-            hexcode="#4bd62f",
-            original_format=ColorFormat.RGB,
-            description="green",
-        )
-        actual_first_color = result[0]
-
-        expected_second_color = Color(
             rgb=RGB(212, 104, 4),
             hexcode="#d46804",
             original_format=ColorFormat.HEXCODE,
             description="orange",
+        )
+        actual_first_color = result[0]
+
+        expected_second_color = Color(
+            rgb=RGB(235, 61, 52),
+            hexcode="#eb3d34",
+            original_format=ColorFormat.HEXCODE,
+            description="red",
         )
         actual_second_color = result[1]
 
