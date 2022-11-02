@@ -202,9 +202,7 @@ class ColorSorter:
 
         for coordinate_index in range(number_of_coodinates):
             doubled_chunk = chunk * 2
-            modulus_from_halfed_coordinate: int = round(
-                coordinates[coordinate_index] % 2
-            )
+            modulus_from_halfed_coordinate = round(coordinates[coordinate_index] % 2)
             chunk = doubled_chunk + modulus_from_halfed_coordinate
             coordinates[coordinate_index] /= 2
 
