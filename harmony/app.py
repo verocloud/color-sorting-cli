@@ -17,7 +17,7 @@ def get_colors_from_file(file_path: str) -> None:
     sorter = ColorSorter()
 
     colors = extractor.extract_from_file(file_path)
-    sorted_colors = sorter.sort(colors)
+    sorter.sort(colors)
 
     final_file_path = get_final_file_path(file_path)
     rich.print(f"Colors sorted and saved to {final_file_path}")

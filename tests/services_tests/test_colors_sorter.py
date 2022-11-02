@@ -1,4 +1,5 @@
 from typing import List, Tuple
+
 from harmony.constants import ColorFormat
 from harmony.models import RGB, Color
 from harmony.services import ColorSorter

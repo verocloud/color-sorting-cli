@@ -1,10 +1,10 @@
-from functools import reduce
-from math import ceil, log
 import os
 import re
-from typing import Iterator, List, Tuple
-from harmony.constants import ColorFormat
+from functools import reduce
+from math import ceil, log
+from typing import Iterator, List, Tuple, Union
 
+from harmony.constants import ColorFormat
 from harmony.exceptions import InvalidColorException, InvalidFileException
 from harmony.models import RGB, Color
 
@@ -72,7 +72,8 @@ class ColorExtractor:
 
     def _make_color_from_hexcode(self, hexcode: str) -> Color:
         index_of_whitespace = hexcode.index(" ")
-        description = hexcode[index_of_whitespace + 1 :]
+        index_after_whitespace = index_of_whitespace + 1
+        description = hexcode[index_after_whitespace:]
         description = description.strip()
 
         hexcode = hexcode[:index_of_whitespace]
@@ -127,7 +128,7 @@ class ColorExtractor:
 class ColorSorter:
     """Service for sorting colors"""
 
-    def sort(self, colors_to_sort: List[Color]) -> Tuple[Color]:
+    def sort(self, colors_to_sort: List[Color]) -> Tuple[Color, ...]:
         """Sorts a list of colors
 
         Args:
@@ -148,7 +149,9 @@ class ColorSorter:
 
         return self._get_int_from_hillbert_coordinates([x, y, z])
 
-    def _get_int_from_hillbert_coordinates(self, coordinates: List[int]) -> int:
+    def _get_int_from_hillbert_coordinates(
+        self, coordinates: List[Union[int, float]]
+    ) -> int:
         number_of_coodinates = len(coordinates)
 
         coordinate_chunks = self._unpack_coordinates(coordinates)
@@ -172,7 +175,7 @@ class ColorSorter:
 
         return self._pack_index(chunks, number_of_coodinates)
 
-    def _unpack_coordinates(self, coords: List[int]):
+    def _unpack_coordinates(self, coords: List[Union[int, float]]) -> List[int]:
         biggest_coordinates = reduce(max, coords)
         log_of_coordinates_on_base_2 = log(biggest_coordinates + 1, 2)
         rounded_log_of_coordinates_on_base_2 = ceil(log_of_coordinates_on_base_2)
@@ -180,7 +183,9 @@ class ColorSorter:
 
         return self._transpose_bits(coords, max_of_bits)
 
-    def _transpose_bits(self, coordinates: List[int], max_of_bits: int) -> List[int]:
+    def _transpose_bits(
+        self, coordinates: List[Union[int, float]], max_of_bits: int
+    ) -> List[int]:
         coordinates = list(coordinates)  # Make a copy we can modify safely.
         number_of_coodinates = len(coordinates)
         chunks = [0] * max_of_bits
@@ -190,20 +195,26 @@ class ColorSorter:
 
         return chunks
 
-    def _get_chunk(self, number_of_coodinates: int, coordinates: List[int]) -> int:
+    def _get_chunk(
+        self, number_of_coodinates: int, coordinates: List[Union[int, float]]
+    ) -> int:
         chunk = 0
 
         for coordinate_index in range(number_of_coodinates):
-            chunk = chunk * 2 + coordinates[coordinate_index] % 2
+            doubled_chunk = chunk * 2
+            modulus_from_halfed_coordinate: int = round(
+                coordinates[coordinate_index] % 2
+            )
+            chunk = doubled_chunk + modulus_from_halfed_coordinate
             coordinates[coordinate_index] /= 2
 
         return round(chunk)
 
     def _get_start_and_end_indices(
         self, number_of_chunks: int, number_of_coordinates: int
-    ) -> Tuple[int]:
+    ) -> Tuple[int, int]:
 
-        return 0, 2 ** ((-number_of_chunks - 1) % number_of_coordinates)
+        return 0, round(2 ** ((-number_of_chunks - 1) % number_of_coordinates))
 
     def _get_gray_decoded(
         self, start: int, end: int, mask: int, coordinate_chunk: int
@@ -224,7 +235,7 @@ class ColorSorter:
 
     def _get_child_start_and_end_indices(
         self, parent_start: int, parent_end: int, mask: int, i: int
-    ) -> Tuple[int]:
+    ) -> Tuple[int, int]:
         start_i = max(0, (i - 1) & ~1)
         end_i = min(mask, (i + 1) | 1)
         child_start = self._get_gray_encoded(parent_start, parent_end, mask, start_i)
