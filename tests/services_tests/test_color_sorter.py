@@ -5,7 +5,7 @@ from harmony.models import RGB, Color
 from harmony.services import ColorSorter
 
 
-class TestColorsSorter:
+class TestColorSorter:
     """Test for the color sorting service"""
 
     def test_sorting(self) -> None:

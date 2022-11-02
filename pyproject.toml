@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "harmony"
+version = "0.1.0"
+description = "CLI for sorting colors"
+authors = ["Lucas Calegario <lucas.c.calegario@outlook.com>"]
+readme = "README.md"
+
+[tool.poetry.scripts]
+harmony = "harmony.main:app"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+typer = ">=0.6.1, <0.7.0"
+rich = ">=12.6.0, <12.7.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=7.2.0, < 7.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

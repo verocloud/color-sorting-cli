@@ -4,7 +4,7 @@ import pytest
 from click.testing import Result
 from typer.testing import CliRunner
 
-from harmony.app import app
+from harmony.main import app
 from tests.helpers import get_temporary_file_path
 
 

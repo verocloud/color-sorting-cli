@@ -27,8 +27,8 @@ def get_final_file_path(source_file_path: str) -> str:
     return f"{source_file_path}_sorted"
 
 
-class ColorExtractor:
-    """Extractor of colors"""
+class ColorReader:
+    """Service for reading colors from file"""
 
     def extract_from_file(self, file_path: str) -> List[Color]:
         """Extracts a list of colors from a file
@@ -84,8 +84,8 @@ class ColorExtractor:
             hexcode = hexcode + hexcode[1:]
 
         red = int(hexcode[1:3], 16)
-        green = int(hexcode[5:], 16)
-        blue = int(hexcode[3:5], 16)
+        green = int(hexcode[3:5], 16)
+        blue = int(hexcode[5:], 16)
         rgb = RGB(red=red, green=green, blue=blue)
 
         hexcode = hexcode.lower()
@@ -112,10 +112,14 @@ class ColorExtractor:
         red = int(red_string)
         green = int(green_string)
         blue = int(blue_string)
+
+        for amount in (red, green, blue):
+            self._check_rgb_amount(amount)
+
         rgb = RGB(red=red, green=green, blue=blue)
 
-        hexcode = ("#{:X}{:X}{:X}").format(rgb.red, rgb.green, rgb.blue)
-        hexcode = hexcode.lower()
+        hexcode = "%02x%02x%02x" % (red, green, blue)
+        hexcode = f"#{hexcode.lower()}"
 
         return Color(
             rgb=rgb,
@@ -123,6 +127,20 @@ class ColorExtractor:
             original_format=ColorFormat.RGB,
             description=description,
         )
+
+    def _check_rgb_amount(self, amount: int) -> None:
+        """Raise exception if amount not between 0 and 255"""
+        is_amount_greater_or_equal_to_zero = amount >= 0
+        is_amount_less_or_equal_to_255 = amount <= 255
+        is_amount_between_zero_and_255 = (
+            is_amount_greater_or_equal_to_zero and is_amount_less_or_equal_to_255
+        )
+
+        if not is_amount_between_zero_and_255:
+            raise InvalidColorException(
+                "The amount of red, green and blue needs to be between 0 and 255, "
+                + f"{amount} is invalid"
+            )
 
 
 class ColorSorter:
@@ -253,3 +271,47 @@ class ColorSorter:
     def _pack_index(self, chunks, nD):
         p = 2**nD  # Turn digits mod 2**nD back into a single number:
         return reduce(lambda n, chunk: n * p + chunk, chunks)
+
+
+class ColorWriter:
+    """Service for writing colors to file"""
+
+    def __init__(self, format: str = ColorFormat.SAME_AS_INPUT):
+        COLOR_STRING_GETTER_DICT = {
+            ColorFormat.HEXCODE: self._get_hexcode_string,
+            ColorFormat.RGB: self._get_rgb_string,
+            ColorFormat.SAME_AS_INPUT: self._get_color_as_input_format,
+        }
+
+        self._get_color_string = COLOR_STRING_GETTER_DICT[format]
+
+    def write_colors_to_file(self, colors: Tuple[Color, ...], final_file_path: str):
+        """Write colors to passed file
+
+        Args:
+            colors (Tuple[Color]): colors to be written
+            final_file_path (str): path to the file where the colors will be passed
+        """
+
+        file_content: str = ""
+
+        for color in colors:
+            file_content += self._get_color_string(color)
+
+        with open(final_file_path, "w", encoding="utf8") as final_file:
+            final_file.write(file_content)
+
+    def _get_color_as_input_format(self, color: Color) -> str:
+        is_input_format_as_hexcode = color.original_format == ColorFormat.HEXCODE
+
+        if is_input_format_as_hexcode:
+            return self._get_hexcode_string(color)
+
+        return self._get_rgb_string(color)
+
+    def _get_hexcode_string(self, color: Color) -> str:
+        return f"{color.hexcode} {color.description}\n"
+
+    def _get_rgb_string(self, color: Color) -> str:
+        rgb = color.rgb
+        return f"({rgb.red}, {rgb.green}, {rgb.blue}) {color.description}\n"

@@ -5,12 +5,12 @@ import pytest
 
 from harmony.exceptions import InvalidColorException, InvalidFileException
 from harmony.models import RGB, Color
-from harmony.services import ColorExtractor
+from harmony.services import ColorReader
 from tests.helpers import get_temporary_file_path
 
 
-class TestColorsExtractor:
-    """Tests for the extractor of colors from the file"""
+class TestColorReader:
+    """Tests for the reader of color files"""
 
     def test_extract_from_file(self) -> None:
         """Test extracting the colors from a valid file"""
@@ -29,7 +29,7 @@ class TestColorsExtractor:
         return temporary_file_path
 
     def _then_should_extract_colors(self, colors: List[Color]) -> None:
-        expected_rgb_for_the_first_color = RGB(red=22, green=196, blue=92)
+        expected_rgb_for_the_first_color = RGB(red=22, green=92, blue=196)
         actual_rgb_for_the_first_color = colors[0].rgb
 
         expected_hexcode_for_the_second_color = "#c416be"
@@ -83,7 +83,7 @@ class TestColorsExtractor:
         return temporary_file_path
 
     def _when_file_is_passed(self, file_path: str) -> List[Color]:
-        extractor = ColorExtractor()
+        extractor = ColorReader()
         return extractor.extract_from_file(file_path)
 
     def _then_should_raise_invalid_color(self, result: Callable[[], None]):
