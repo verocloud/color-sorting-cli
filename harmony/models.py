@@ -6,8 +6,8 @@ class RGB:
     """Model for the RGB format of color"""
 
     red: int
-    blue: int
     green: int
+    blue: int
 
 
 @dataclass
@@ -16,3 +16,5 @@ class Color:
 
     rgb: RGB
     hexcode: str
+    original_format: str
+    description: str

@@ -1,3 +1,3 @@
 class ColorFormat:
-    RGB = "rgb"
-    HEXCODE = "hexcode"
+    RGB: str = "rgb"
+    HEXCODE: str = "hexcode"

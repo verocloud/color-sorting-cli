@@ -1,7 +1,7 @@
 import rich
 import typer
 
-from harmony.services import ColorExtractor, get_final_file_path
+from harmony.services import ColorExtractor, ColorSorter, get_final_file_path
 
 app = typer.Typer(pretty_exceptions_show_locals=False)
 
@@ -14,7 +14,10 @@ def get_colors_from_file(file_path: str) -> None:
         file_path (str): path to the file with the original set of colors
     """
     extractor = ColorExtractor()
-    extractor.extract_from_file(file_path)
+    sorter = ColorSorter()
+
+    colors = extractor.extract_from_file(file_path)
+    sorted_colors = sorter.sort(colors)
 
     final_file_path = get_final_file_path(file_path)
     rich.print(f"Colors sorted and saved to {final_file_path}")
