@@ -30,7 +30,7 @@ jobs:
       - name: Lint
         run: |
           mypy harmony
-          pylint harmony --disable=C0114,R0903
+          pylint harmony --disable=C0114,C0209,R0903
           flake8 harmony tests --max-line-length=88
           black harmony tests --check
           isort harmony tests --check-only --profile black
