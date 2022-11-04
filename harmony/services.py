@@ -219,23 +219,23 @@ class ColorSorter:
         chunk = 0
 
         for coordinate_index in range(number_of_coodinates):
-            chunk = chunk * 2 + round(coordinates[coordinate_index] % 2)
+            chunk = chunk * 2 + int(coordinates[coordinate_index] % 2)
             coordinates[coordinate_index] /= 2
 
-        return round(chunk)
+        return int(chunk)
 
     def _get_start_and_end_indices(
         self, number_of_chunks: int, number_of_coordinates: int
     ) -> Tuple[int, int]:
 
-        return 0, round(2 ** ((-number_of_chunks - 1) % number_of_coordinates))
+        return 0, int(2 ** ((-number_of_chunks - 1) % number_of_coordinates))
 
     def _get_gray_decoded(
         self, start: int, end: int, mask: int, coordinate_chunk: int
     ) -> int:
         modulus = mask + 1
-        rg = round((coordinate_chunk ^ start) * (modulus / 2))
-        return self._decode_gray((rg | round(rg / modulus)) & mask)
+        rg = int((coordinate_chunk ^ start) * (modulus / 2))
+        return self._decode_gray((rg | int(rg / modulus)) & mask)
 
     def _decode_gray(self, n: int) -> int:
         sh = 1
@@ -259,14 +259,14 @@ class ColorSorter:
     def _get_gray_encoded(self, start, end, mask, i) -> int:
         travel_bit: int = start ^ end
         modulus: int = mask + 1
-        g: int = round(self._encode_gray(i) * (travel_bit * 2))
-        return ((g | round(g / modulus)) & mask) ^ start
+        g: int = int(self._encode_gray(i) * (travel_bit * 2))
+        return ((g | int(g / modulus)) & mask) ^ start
 
     def _encode_gray(self, bn):
         assert bn >= 0
         assert type(bn) == int
 
-        return bn ^ round(bn / 2)
+        return bn ^ int(bn / 2)
 
     def _pack_index(self, chunks, nD):
         p = 2**nD  # Turn digits mod 2**nD back into a single number:
