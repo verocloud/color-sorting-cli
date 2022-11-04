@@ -3,7 +3,7 @@ from typing import Tuple
 
 from harmony.constants import ColorFormat
 from harmony.models import RGB, Color
-from harmony.services import ColorWriter
+from harmony.service_layer.services import ColorWriter
 from tests.helpers import get_temporary_file_path
 
 

@@ -1,12 +1,11 @@
 import os
 import re
-from functools import reduce
-from math import ceil, log
-from typing import Iterator, List, Tuple, Union
+from typing import Dict, Iterator, List, Tuple, Type
 
-from harmony.constants import ColorFormat
+from harmony.constants import ColorFormat, SortingStrategyName
 from harmony.exceptions import InvalidColorException, InvalidFileException
 from harmony.models import RGB, Color
+from harmony.service_layer.sorting_strategies import HillbertSorting, SortingStrategy
 
 
 def get_final_file_path(source_file_path: str) -> str:
@@ -44,7 +43,7 @@ class ColorReader:
         with open(file_path, "r", encoding="utf8") as colors_file:
             color_strings = colors_file.readlines()
 
-        return [color for color in self._make_colors_list(color_strings)]
+        return list(self._make_colors_list(color_strings))
 
     def _check_for_file_path(self, path: str) -> None:
         if not os.path.exists(path):
@@ -65,7 +64,7 @@ class ColorReader:
         if hexcode_pattern.match(color_string):
             return self._make_color_from_hexcode(color_string)
 
-        elif rgb_pattern.match(color_string):
+        if rgb_pattern.match(color_string):
             return self._make_color_from_rgb(color_string)
 
         raise InvalidColorException(f"{color_string} does not match any valid format")
@@ -146,8 +145,17 @@ class ColorReader:
 class ColorSorter:
     """Service for sorting colors"""
 
+    strategy: SortingStrategy
+
+    def __init__(self, strategy_name: str):
+        strategy_dict: Dict[str, Type[SortingStrategy]] = {
+            SortingStrategyName.HILLBERT: HillbertSorting,
+        }
+
+        self.strategy = strategy_dict[strategy_name]()
+
     def sort(self, colors_to_sort: List[Color]) -> Tuple[Color, ...]:
-        """Sorts a list of colors
+        """Sort a list of colors
 
         Args:
             colors_to_sort (List[Color]): the colors to be sorted
@@ -155,135 +163,20 @@ class ColorSorter:
         Returns:
             Tuple[Color]: sorted set of colors
         """
-        colors_to_sort.sort(key=self._get_hillbert_index)
-        return tuple(colors_to_sort)
-
-    def _get_hillbert_index(self, color: Color):
-        """Return the hillbert index for the color RGB"""
-        rgb = color.rgb
-        x = rgb.red * 255
-        y = rgb.green * 255
-        z = rgb.blue * 255
-
-        return self._get_int_from_hillbert_coordinates([x, y, z])
-
-    def _get_int_from_hillbert_coordinates(
-        self, coordinates: List[Union[int, float]]
-    ) -> int:
-        number_of_coodinates = len(coordinates)
-
-        coordinate_chunks = self._unpack_coordinates(coordinates)
-        number_of_chunks = len(coordinate_chunks)
-
-        start, end = self._get_start_and_end_indices(
-            number_of_chunks, number_of_coodinates
-        )
-
-        chunks = [0] * number_of_chunks
-        mask: int = 2**number_of_coodinates - 1
-
-        for chunk_index in range(number_of_chunks):
-            gray_bit = self._get_gray_decoded(
-                start, end, mask, coordinate_chunks[chunk_index]
-            )
-            chunks[chunk_index] = gray_bit
-            start, end = self._get_child_start_and_end_indices(
-                start, end, mask, gray_bit
-            )
-
-        return self._pack_index(chunks, number_of_coodinates)
-
-    def _unpack_coordinates(self, coords: List[Union[int, float]]) -> List[int]:
-        biggest_coordinates = reduce(max, coords)
-        log_of_coordinates_on_base_2 = log(biggest_coordinates + 1, 2)
-        rounded_log_of_coordinates_on_base_2 = ceil(log_of_coordinates_on_base_2)
-        max_of_bits = max(1, rounded_log_of_coordinates_on_base_2)
-
-        return self._transpose_bits(coords, max_of_bits)
-
-    def _transpose_bits(
-        self, coordinates: List[Union[int, float]], max_of_bits: int
-    ) -> List[int]:
-        coordinates = list(coordinates)  # Make a copy we can modify safely.
-        number_of_coodinates = len(coordinates)
-        chunks = [0] * max_of_bits
-
-        for chunk_index in range(max_of_bits - 1, -1, -1):
-            chunks[chunk_index] = self._get_chunk(number_of_coodinates, coordinates)
-
-        return chunks
-
-    def _get_chunk(
-        self, number_of_coodinates: int, coordinates: List[Union[int, float]]
-    ) -> int:
-        chunk = 0
-
-        for coordinate_index in range(number_of_coodinates):
-            chunk = chunk * 2 + int(coordinates[coordinate_index] % 2)
-            coordinates[coordinate_index] /= 2
-
-        return int(chunk)
-
-    def _get_start_and_end_indices(
-        self, number_of_chunks: int, number_of_coordinates: int
-    ) -> Tuple[int, int]:
-
-        return 0, int(2 ** ((-number_of_chunks - 1) % number_of_coordinates))
-
-    def _get_gray_decoded(
-        self, start: int, end: int, mask: int, coordinate_chunk: int
-    ) -> int:
-        modulus = mask + 1
-        rg = int((coordinate_chunk ^ start) * (modulus / 2))
-        return self._decode_gray((rg | int(rg / modulus)) & mask)
-
-    def _decode_gray(self, n: int) -> int:
-        sh = 1
-        while True:
-            div = n >> sh
-            n ^= div
-            if div <= 1:
-                return n
-
-            sh <<= 1
-
-    def _get_child_start_and_end_indices(
-        self, parent_start: int, parent_end: int, mask: int, i: int
-    ) -> Tuple[int, int]:
-        start_i = max(0, (i - 1) & ~1)
-        end_i = min(mask, (i + 1) | 1)
-        child_start = self._get_gray_encoded(parent_start, parent_end, mask, start_i)
-        child_end = self._get_gray_encoded(parent_start, parent_end, mask, end_i)
-        return child_start, child_end
-
-    def _get_gray_encoded(self, start, end, mask, i) -> int:
-        travel_bit: int = start ^ end
-        modulus: int = mask + 1
-        g: int = int(self._encode_gray(i) * (travel_bit * 2))
-        return ((g | int(g / modulus)) & mask) ^ start
-
-    def _encode_gray(self, bn):
-        assert bn >= 0
-        assert type(bn) == int
-
-        return bn ^ int(bn / 2)
-
-    def _pack_index(self, chunks, nD):
-        p = 2**nD  # Turn digits mod 2**nD back into a single number:
-        return reduce(lambda n, chunk: n * p + chunk, chunks)
+        return self.strategy.sort(colors_to_sort)
 
 
 class ColorWriter:
     """Service for writing colors to file"""
 
-    def __init__(self, format: str = ColorFormat.SAME_AS_INPUT):
-        COLOR_STRING_GETTER_DICT = {
+    def __init__(self, color_format: str = ColorFormat.SAME_AS_INPUT):
+        color_string_getter_dict = {
             ColorFormat.HEXCODE: self._get_hexcode_string,
             ColorFormat.RGB: self._get_rgb_string,
             ColorFormat.SAME_AS_INPUT: self._get_color_as_input_format,
         }
 
-        self._get_color_string = COLOR_STRING_GETTER_DICT[format]
+        self._get_color_string = color_string_getter_dict[color_format]
 
     def write_colors_to_file(self, colors: Tuple[Color, ...], final_file_path: str):
         """Write colors to passed file

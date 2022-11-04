@@ -1,8 +1,8 @@
 from typing import List, Tuple
 
-from harmony.constants import ColorFormat
+from harmony.constants import ColorFormat, SortingStrategyName
 from harmony.models import RGB, Color
-from harmony.services import ColorSorter
+from harmony.service_layer.services import ColorSorter
 
 
 class TestColorSorter:
@@ -11,8 +11,8 @@ class TestColorSorter:
     def test_sorting(self) -> None:
         """Test sorting colors"""
         arrangement = self._given_colors()
-        result = self._when_sorter_is_called(arrangement)
-        self._then_should_sort(result)
+        result = self._when_sorter_is_to_hillbert_sorting(arrangement)
+        self._then_should_hillbert_sort(result)
 
     def _given_colors(self) -> List[Color]:
         rgb1 = RGB(235, 61, 52)
@@ -44,12 +44,14 @@ class TestColorSorter:
 
         return [color1, color2, color3]
 
-    def _when_sorter_is_called(self, arrangement: List[Color]) -> Tuple[Color]:
-        sorter = ColorSorter()
+    def _when_sorter_is_to_hillbert_sorting(
+        self, arrangement: List[Color]
+    ) -> Tuple[Color]:
+        sorter = ColorSorter(SortingStrategyName.HILLBERT)
 
         return sorter.sort(arrangement)
 
-    def _then_should_sort(self, result: Tuple[Color]) -> None:
+    def _then_should_hillbert_sort(self, result: Tuple[Color]) -> None:
         expected_first_color = Color(
             rgb=RGB(75, 214, 47),
             hexcode="#4bd62f",

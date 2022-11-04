@@ -5,7 +5,7 @@ import pytest
 
 from harmony.exceptions import InvalidColorException, InvalidFileException
 from harmony.models import RGB, Color
-from harmony.services import ColorReader
+from harmony.service_layer.services import ColorReader
 from tests.helpers import get_temporary_file_path
 
 
