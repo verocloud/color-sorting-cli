@@ -10,3 +10,4 @@ class SortingStrategyName:
     """Constants for the sorting strategies"""
 
     HILLBERT: str = "hillbert"
+    RGB: str = "rgb"

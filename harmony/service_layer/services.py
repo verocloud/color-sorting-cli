@@ -5,7 +5,11 @@ from typing import Dict, Iterator, List, Tuple, Type
 from harmony.constants import ColorFormat, SortingStrategyName
 from harmony.exceptions import InvalidColorException, InvalidFileException
 from harmony.models import RGB, Color
-from harmony.service_layer.sorting_strategies import HillbertSorting, SortingStrategy
+from harmony.service_layer.sorting_strategies import (
+    HillbertSorting,
+    RGBSorting,
+    SortingStrategy,
+)
 
 
 def get_final_file_path(source_file_path: str) -> str:
@@ -150,6 +154,7 @@ class ColorSorter:
     def __init__(self, strategy_name: str):
         strategy_dict: Dict[str, Type[SortingStrategy]] = {
             SortingStrategyName.HILLBERT: HillbertSorting,
+            SortingStrategyName.RGB: RGBSorting,
         }
 
         self.strategy = strategy_dict[strategy_name]()

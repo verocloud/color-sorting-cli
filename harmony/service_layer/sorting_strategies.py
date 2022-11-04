@@ -21,11 +21,32 @@ class SortingStrategy(ABC):
         """
 
 
+class RGBSorting(SortingStrategy):
+    """Sorting strategy based on RGB values"""
+
+    def sort(self, colors_to_sort: List[Color]) -> Tuple[Color, ...]:
+        """Sort a list of colors based on its RGB value
+
+        Args:
+            colors_to_sort (List[Color]): the colors to be sorted
+
+        Returns:
+            Tuple[Color]: sorted set of colors
+        """
+        colors_to_sort.sort(key=self._get_rgb_values)
+        return tuple(colors_to_sort)
+
+    def _get_rgb_values(self, color: Color) -> Tuple[int, int, int]:
+        rgb = color.rgb
+
+        return (rgb.red, rgb.green, rgb.blue)
+
+
 class HillbertSorting(SortingStrategy):
     """Hillbert Curve sorting strategy"""
 
     def sort(self, colors_to_sort: List[Color]) -> Tuple[Color, ...]:
-        """Sorts a list of colors using the Hillbert Curve algorithm
+        """Sort a list of colors using the Hillbert Curve algorithm
 
         Args:
             colors_to_sort (List[Color]): the colors to be sorted
