@@ -7,6 +7,7 @@ from harmony.exceptions import InvalidColorException, InvalidFileException
 from harmony.models import RGB, Color
 from harmony.service_layer.sorting_strategies import (
     HillbertSorting,
+    HSLSorting,
     RGBSorting,
     SortingStrategy,
 )
@@ -153,8 +154,9 @@ class ColorSorter:
 
     def __init__(self, strategy_name: str):
         strategy_dict: Dict[str, Type[SortingStrategy]] = {
-            SortingStrategyName.HILLBERT: HillbertSorting,
             SortingStrategyName.RGB: RGBSorting,
+            SortingStrategyName.HSL: HSLSorting,
+            SortingStrategyName.HILLBERT: HillbertSorting,
         }
 
         self.strategy = strategy_dict[strategy_name]()

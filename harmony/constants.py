@@ -11,3 +11,4 @@ class SortingStrategyName:
 
     HILLBERT: str = "hillbert"
     RGB: str = "rgb"
+    HSL: str = "hsl"

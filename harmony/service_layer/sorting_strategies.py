@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from functools import reduce
-from math import ceil, log
+from math import acos, ceil, log, sqrt
 from typing import List, Tuple, Union
 
 from harmony.models import Color
@@ -25,7 +25,7 @@ class RGBSorting(SortingStrategy):
     """Sorting strategy based on RGB values"""
 
     def sort(self, colors_to_sort: List[Color]) -> Tuple[Color, ...]:
-        """Sort a list of colors based on its RGB value
+        """Sort a list of colors based on their RGB value
 
         Args:
             colors_to_sort (List[Color]): the colors to be sorted
@@ -40,6 +40,103 @@ class RGBSorting(SortingStrategy):
         rgb = color.rgb
 
         return (rgb.red, rgb.green, rgb.blue)
+
+
+class HSLSorting(SortingStrategy):
+    """Sorting strategy based on HSL"""
+
+    def sort(self, colors_to_sort: List[Color]) -> Tuple[Color, ...]:
+        """Sort a list of colors based on their HSL value
+
+        Args:
+            colors_to_sort (List[Color]): the colors to be sorted
+
+        Returns:
+            Tuple[Color]: sorted set of colors
+        """
+        colors_to_sort.sort(key=self._get_hsl_values)
+        return tuple(colors_to_sort)
+
+    def _get_hsl_values(self, color: Color) -> Tuple[int, int, int]:
+        rgb = color.rgb
+        biggest_value = max(rgb.red, rgb.green, rgb.blue)
+        smallest_value = min(rgb.red, rgb.green, rgb.blue)
+
+        luminosity = self._calculate_luminosity(biggest_value, smallest_value)
+        saturation = self._calculate_saturation(
+            biggest_value, smallest_value, luminosity
+        )
+        hue = self._calculate_hue(rgb.red, rgb.green, rgb.blue)
+
+        return (hue, saturation, luminosity)
+
+    def _calculate_luminosity(self, biggest_value: int, smallest_value: int) -> int:
+        sum_of_biggest_and_smallest = biggest_value + smallest_value
+
+        return round(sum_of_biggest_and_smallest / 510)
+
+    def _calculate_saturation(
+        self, biggest_value: int, smallest_value: int, luminosity: float
+    ) -> int:
+        if luminosity > 0:
+            difference_between_biggest_and_smallest = biggest_value - smallest_value
+            difference_divided_by_255 = difference_between_biggest_and_smallest / 255
+            doubled_luminosity_value = 2 * luminosity
+            doubled_luminosity_value_minus_1 = doubled_luminosity_value - 1
+            absolute_doubled_luminosity_value_minus_1 = abs(
+                doubled_luminosity_value_minus_1
+            )
+            one_minus_absolute_doubled_luminosity_value_minus_1 = (
+                1 - absolute_doubled_luminosity_value_minus_1
+            )
+
+            if one_minus_absolute_doubled_luminosity_value_minus_1 == 0:
+                one_minus_absolute_doubled_luminosity_value_minus_1 += 10 ** (-7)
+
+            return round(
+                difference_divided_by_255
+                / one_minus_absolute_doubled_luminosity_value_minus_1
+            )
+
+        return 0
+
+    def _calculate_hue(self, red: int, green: int, blue: int) -> int:
+        half_green = green / 2
+        half_blue = blue / 2
+        difference_from_ref_to_halfs = red - half_green - half_blue
+
+        squared_root_of_perfect_square = self._calculate_squared_root_of_perfect_square(
+            red, green, blue
+        )
+
+        cosine = difference_from_ref_to_halfs / squared_root_of_perfect_square
+        angle = acos(cosine)
+
+        if green >= blue:
+            return round(angle)
+
+        full_circle_minus_angle = 360 - angle
+        return round(full_circle_minus_angle)
+
+    def _calculate_squared_root_of_perfect_square(
+        self, red: int, green: int, blue: int
+    ) -> float:
+        red_squared = red**2
+        green_squared = green**2
+        blue_squared = blue**2
+        red_times_green = red * green
+        red_times_blue = red * blue
+        green_times_blue = green * blue
+        perfect_square = (
+            red_squared
+            + green_squared
+            + blue_squared
+            - red_times_green
+            - red_times_blue
+            - green_times_blue
+        )
+
+        return sqrt(perfect_square)
 
 
 class HillbertSorting(SortingStrategy):
