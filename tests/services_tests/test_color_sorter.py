@@ -8,41 +8,8 @@ from harmony.service_layer.services import ColorSorter
 class TestColorSorter:
     """Test for the color sorting service"""
 
-    def test_sorting_with_hillbert_strategy(self) -> None:
-        """Test sorting colors with the Hillbert strategy"""
-        arrangement = self._given_colors()
-        result = self._when_sorter_set_to_hillbert_strategy(arrangement)
-        self._then_should_hillbert_sort(result)
-
-    def _when_sorter_set_to_hillbert_strategy(
-        self, arrangement: List[Color]
-    ) -> Tuple[Color]:
-        sorter = ColorSorter(SortingStrategyName.HILLBERT)
-
-        return sorter.sort(arrangement)
-
-    def _then_should_hillbert_sort(self, result: Tuple[Color]) -> None:
-        expected_first_color = Color(
-            rgb=RGB(75, 214, 47),
-            hexcode="#4bd62f",
-            original_format=ColorFormat.RGB,
-            description="green",
-        )
-        actual_first_color = result[0]
-
-        expected_second_color = Color(
-            rgb=RGB(212, 104, 4),
-            hexcode="#d46804",
-            original_format=ColorFormat.HEXCODE,
-            description="orange",
-        )
-        actual_second_color = result[1]
-
-        assert expected_first_color == actual_first_color
-        assert expected_second_color == actual_second_color
-
     def test_sorting_with_rgb_strategy(self) -> None:
-        """Test sorting colors with the Hillbert Curve algorithm"""
+        """Test sorting colors on their RGB values"""
         arrangement = self._given_colors()
         result = self._when_sorter_set_to_rgb_strategy(arrangement)
         self._then_should_rgb_sort(result)
@@ -74,8 +41,41 @@ class TestColorSorter:
         assert expected_first_color == actual_first_color
         assert expected_second_color == actual_second_color
 
+    def test_sorting_with_hsv_strategy(self) -> None:
+        """Test sorting colors on their HSV values"""
+        arrangement = self._given_colors()
+        result = self._when_sorter_set_to_hsv_strategy(arrangement)
+        self._then_should_hsv_sort(result)
+
+    def _when_sorter_set_to_hsv_strategy(
+        self, arrangement: List[Color]
+    ) -> Tuple[Color]:
+        sorter = ColorSorter(SortingStrategyName.HSV)
+
+        return sorter.sort(arrangement)
+
+    def _then_should_hsv_sort(self, result: Tuple[Color]) -> None:
+        expected_first_color = Color(
+            rgb=RGB(235, 61, 52),
+            hexcode="#eb3d34",
+            original_format=ColorFormat.HEXCODE,
+            description="red",
+        )
+        actual_first_color = result[0]
+
+        expected_second_color = Color(
+            rgb=RGB(212, 104, 4),
+            hexcode="#d46804",
+            original_format=ColorFormat.HEXCODE,
+            description="orange",
+        )
+        actual_second_color = result[1]
+
+        assert expected_first_color == actual_first_color
+        assert expected_second_color == actual_second_color
+
     def test_sorting_with_hsl_strategy(self) -> None:
-        """Test sorting colors with the Hillbert Curve algorithm"""
+        """Test sorting colors on their HSL values"""
         arrangement = self._given_colors()
         result = self._when_sorter_set_to_hsl_strategy(arrangement)
         self._then_should_hsl_sort(result)
@@ -93,6 +93,138 @@ class TestColorSorter:
             hexcode="#eb3d34",
             original_format=ColorFormat.HEXCODE,
             description="red",
+        )
+        actual_first_color = result[0]
+
+        expected_second_color = Color(
+            rgb=RGB(212, 104, 4),
+            hexcode="#d46804",
+            original_format=ColorFormat.HEXCODE,
+            description="orange",
+        )
+        actual_second_color = result[1]
+
+        assert expected_first_color == actual_first_color
+        assert expected_second_color == actual_second_color
+
+    def test_sorting_with_luminosity_strategy(self) -> None:
+        """Test sorting colors on their luminosity"""
+        arrangement = self._given_colors()
+        result = self._when_sorter_set_to_luminosity_strategy(arrangement)
+        self._then_should_luminosity_sort(result)
+
+    def _when_sorter_set_to_luminosity_strategy(
+        self, arrangement: List[Color]
+    ) -> Tuple[Color]:
+        sorter = ColorSorter(SortingStrategyName.LUMINOSITY)
+
+        return sorter.sort(arrangement)
+
+    def _then_should_luminosity_sort(self, result: Tuple[Color]) -> None:
+        expected_first_color = Color(
+            rgb=RGB(235, 61, 52),
+            hexcode="#eb3d34",
+            original_format=ColorFormat.HEXCODE,
+            description="red",
+        )
+        actual_first_color = result[0]
+
+        expected_second_color = Color(
+            rgb=RGB(212, 104, 4),
+            hexcode="#d46804",
+            original_format=ColorFormat.HEXCODE,
+            description="orange",
+        )
+        actual_second_color = result[1]
+
+        assert expected_first_color == actual_first_color
+        assert expected_second_color == actual_second_color
+
+    def test_sorting_with_step_strategy(self) -> None:
+        """Test sorting colors by steps based on HSV and luminosity"""
+        arrangement = self._given_colors()
+        result = self._when_sorter_set_to_step_strategy(arrangement)
+        self._then_should_step_sort(result)
+
+    def _when_sorter_set_to_step_strategy(
+        self, arrangement: List[Color]
+    ) -> Tuple[Color]:
+        sorter = ColorSorter(SortingStrategyName.STEP)
+
+        return sorter.sort(arrangement)
+
+    def _then_should_step_sort(self, result: Tuple[Color]) -> None:
+        expected_first_color = Color(
+            rgb=RGB(235, 61, 52),
+            hexcode="#eb3d34",
+            original_format=ColorFormat.HEXCODE,
+            description="red",
+        )
+        actual_first_color = result[0]
+
+        expected_second_color = Color(
+            rgb=RGB(212, 104, 4),
+            hexcode="#d46804",
+            original_format=ColorFormat.HEXCODE,
+            description="orange",
+        )
+        actual_second_color = result[1]
+
+        assert expected_first_color == actual_first_color
+        assert expected_second_color == actual_second_color
+
+    def test_sorting_with_alternated_step_strategy(self) -> None:
+        """Test sorting colors by alternated steps based on HSV and luminosity"""
+        arrangement = self._given_colors()
+        result = self._when_sorter_set_to_alternated_step_strategy(arrangement)
+        self._then_should_alternated_step_sort(result)
+
+    def _when_sorter_set_to_alternated_step_strategy(
+        self, arrangement: List[Color]
+    ) -> Tuple[Color]:
+        sorter = ColorSorter(SortingStrategyName.ALTERNATED_STEP)
+
+        return sorter.sort(arrangement)
+
+    def _then_should_alternated_step_sort(self, result: Tuple[Color]) -> None:
+        expected_first_color = Color(
+            rgb=RGB(235, 61, 52),
+            hexcode="#eb3d34",
+            original_format=ColorFormat.HEXCODE,
+            description="red",
+        )
+        actual_first_color = result[0]
+
+        expected_second_color = Color(
+            rgb=RGB(212, 104, 4),
+            hexcode="#d46804",
+            original_format=ColorFormat.HEXCODE,
+            description="orange",
+        )
+        actual_second_color = result[1]
+
+        assert expected_first_color == actual_first_color
+        assert expected_second_color == actual_second_color
+
+    def test_sorting_with_hillbert_strategy(self) -> None:
+        """Test sorting colors with the Hillbert strategy"""
+        arrangement = self._given_colors()
+        result = self._when_sorter_set_to_hillbert_strategy(arrangement)
+        self._then_should_hillbert_sort(result)
+
+    def _when_sorter_set_to_hillbert_strategy(
+        self, arrangement: List[Color]
+    ) -> Tuple[Color]:
+        sorter = ColorSorter(SortingStrategyName.HILLBERT)
+
+        return sorter.sort(arrangement)
+
+    def _then_should_hillbert_sort(self, result: Tuple[Color]) -> None:
+        expected_first_color = Color(
+            rgb=RGB(75, 214, 47),
+            hexcode="#4bd62f",
+            original_format=ColorFormat.RGB,
+            description="green",
         )
         actual_first_color = result[0]
 

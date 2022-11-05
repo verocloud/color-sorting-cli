@@ -3,7 +3,7 @@ from tkinter import Canvas, Misc, Tk
 from dataclasses import dataclass
 from typing import List, Tuple
 
-TOTAL_WIDTH = 300
+TOTAL_WIDTH = 1000
 
 
 def get_colors_file():
@@ -52,8 +52,8 @@ class ColorSliceSetFactory:
 
 
 class ColorSpectrum(Canvas):
-    def __init__(self, master: Misc) -> None:
-        super().__init__(master=master, cnf={})
+    def __init__(self, master: Misc, **kwargs: object) -> None:
+        super().__init__(master=master, cnf={}, **kwargs)
 
         factory = ColorSliceSetFactory()
         color_slices = factory.make_set()
@@ -77,7 +77,7 @@ class Application(Tk):
         self.title("Color Visualization")
         self.geometry(f"{TOTAL_WIDTH}x100")
 
-        color_spectrum = ColorSpectrum(self)
+        color_spectrum = ColorSpectrum(self, width=TOTAL_WIDTH)
         color_spectrum.pack()
 
 

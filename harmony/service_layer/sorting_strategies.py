@@ -1,9 +1,170 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from functools import reduce
 from math import acos, ceil, log, sqrt
 from typing import List, Tuple, Union
 
-from harmony.models import Color
+from harmony.models import RGB, Color
+
+
+class ColorFormatConverter(ABC):
+    """Interface for color format converters"""
+
+    def convert(self, rgb: RGB) -> Tuple[float, ...]:
+        """Converts RGB to other color format"""
+
+
+@dataclass
+class HSVHueData:
+    """Store the data to calculate the hue for the HSV format"""
+
+    red: float
+    green: float
+    blue: float
+    biggest_value: float
+    difference_between_biggest_and_smallest: float
+
+    @property
+    def difference_of_red_from_biggest_value(self):
+        """Return the difference from red to the biggest value"""
+        return abs(self.red - self.biggest_value)
+
+    @property
+    def difference_of_green_from_biggest_value(self):
+        """Return the difference from red to the biggest value"""
+        return abs(self.green - self.biggest_value)
+
+    @property
+    def difference_of_blue_from_biggest_value(self):
+        """Return the difference from red to the biggest value"""
+        return abs(self.blue - self.biggest_value)
+
+    @property
+    def differences_from_biggest_value(self):
+        """Return the differences from the values to the biggest value"""
+        return (
+            self.difference_of_red_from_biggest_value,
+            self.difference_of_green_from_biggest_value,
+            self.difference_of_blue_from_biggest_value,
+        )
+
+
+class RGBtoHSVConverter(ColorFormatConverter):
+    """Converter to convert RGB to HSV"""
+
+    def convert(self, rgb: RGB) -> Tuple[float, ...]:
+        """Converts a RGB object into a tuple with its corresponding HSV values
+
+        Args:
+            rgb (RGB): RGB to be converted
+
+        Returns:
+            Tuple[float, float, float]: the HSV values
+        """
+        red = rgb.red / 255
+        green = rgb.green / 255
+        blue = rgb.blue / 255
+
+        biggest_value = max(red, green, blue)
+        smallest_value = min(red, green, blue)
+
+        difference_between_biggest_and_smallest = biggest_value - smallest_value
+
+        if difference_between_biggest_and_smallest == 0:
+            difference_between_biggest_and_smallest += 10 ** (-7)
+
+        hue_data = HSVHueData(
+            red, green, blue, biggest_value, difference_between_biggest_and_smallest
+        )
+        hue = self._calculate_hue(hue_data)
+        saturation = self._calculate_saturation(
+            biggest_value, difference_between_biggest_and_smallest
+        )
+        value = biggest_value
+
+        return (hue, saturation, value)
+
+    def _calculate_hue(self, data: HSVHueData) -> float:
+        hue: float = -1
+
+        maximum_difference = 10 ** (-7)
+
+        calculation_methods = (
+            lambda: self._calculate_case1(
+                data.green, data.blue, data.difference_between_biggest_and_smallest
+            ),
+            lambda: self._calculate_case2(
+                data.red, data.blue, data.difference_between_biggest_and_smallest
+            ),
+            lambda: self._calculate_case3(
+                data.red, data.green, data.difference_between_biggest_and_smallest
+            ),
+        )
+
+        are_the_biggest_value = [
+            difference < maximum_difference
+            for difference in data.differences_from_biggest_value
+        ]
+        index_of_biggest = are_the_biggest_value.index(True)
+
+        calculate_hue = calculation_methods[index_of_biggest]
+        hue = calculate_hue()
+
+        hue *= 60
+        return hue
+
+    def _calculate_case1(
+        self, green: float, blue: float, difference_between_biggest_and_smallest: float
+    ) -> float:
+        difference_between_green_and_blue = green - blue
+        quotient_of_the_differences = (
+            difference_between_green_and_blue / difference_between_biggest_and_smallest
+        )
+
+        return quotient_of_the_differences % 6
+
+    def _calculate_case2(
+        self, red: float, blue: float, difference_between_biggest_and_smallest: float
+    ) -> float:
+        difference_between_blue_and_red = blue - red
+        quotient_of_the_differences = (
+            difference_between_blue_and_red / difference_between_biggest_and_smallest
+        )
+
+        return quotient_of_the_differences + 2
+
+    def _calculate_case3(
+        self, red: float, green: float, difference_between_biggest_and_smallest: float
+    ) -> float:
+        difference_between_red_and_green = red - green
+        quotient_of_the_differences = (
+            difference_between_red_and_green / difference_between_biggest_and_smallest
+        )
+
+        return quotient_of_the_differences + 4
+
+    def _calculate_saturation(
+        self, biggest_value: float, difference_between_biggest_and_smallest: float
+    ) -> float:
+        difference_from_zero = abs(biggest_value - 0)
+        maximum_difference = 10 ** (-7)
+        is_maximum_zero = difference_from_zero < maximum_difference
+
+        if not is_maximum_zero:
+            return difference_between_biggest_and_smallest / biggest_value
+
+        return 0.0
+
+
+class RGBToLuminosityConverter(ColorFormatConverter):
+    """Converter to convert RGB to perceived luminosity"""
+
+    def convert(self, rgb: RGB) -> Tuple[float, ...]:
+        red_factor = 0.241 * rgb.red
+        green_factor = 0.691 * rgb.green
+        blue_factor = 0.068 * rgb.blue
+
+        return (sqrt(red_factor + green_factor + blue_factor),)
 
 
 class SortingStrategy(ABC):
@@ -25,7 +186,7 @@ class RGBSorting(SortingStrategy):
     """Sorting strategy based on RGB values"""
 
     def sort(self, colors_to_sort: List[Color]) -> Tuple[Color, ...]:
-        """Sort a list of colors based on their RGB value
+        """Sort a list of colors based on their RGB
 
         Args:
             colors_to_sort (List[Color]): the colors to be sorted
@@ -42,11 +203,35 @@ class RGBSorting(SortingStrategy):
         return (rgb.red, rgb.green, rgb.blue)
 
 
+class HSVSorting(SortingStrategy):
+    """Sorting strategy based on HSV"""
+
+    def sort(self, colors_to_sort: List[Color]) -> Tuple[Color, ...]:
+        """Sort a list of colors based on their HSV
+
+        Args:
+            colors_to_sort (List[Color]): the colors to be sorted
+
+        Returns:
+            Tuple[Color]: sorted set of colors
+        """
+        RGBtoHSVConverter()
+
+        colors_to_sort.sort(key=self._get_hsv_values)
+        return tuple(colors_to_sort)
+
+    def _get_hsv_values(self, color: Color):
+        rgb = color.rgb
+        converter = RGBtoHSVConverter()
+
+        return converter.convert(rgb)
+
+
 class HSLSorting(SortingStrategy):
     """Sorting strategy based on HSL"""
 
     def sort(self, colors_to_sort: List[Color]) -> Tuple[Color, ...]:
-        """Sort a list of colors based on their HSL value
+        """Sort a list of colors based on their HSL
 
         Args:
             colors_to_sort (List[Color]): the colors to be sorted
@@ -57,7 +242,7 @@ class HSLSorting(SortingStrategy):
         colors_to_sort.sort(key=self._get_hsl_values)
         return tuple(colors_to_sort)
 
-    def _get_hsl_values(self, color: Color) -> Tuple[int, int, int]:
+    def _get_hsl_values(self, color: Color) -> Tuple[float, float, float]:
         rgb = color.rgb
         biggest_value = max(rgb.red, rgb.green, rgb.blue)
         smallest_value = min(rgb.red, rgb.green, rgb.blue)
@@ -70,14 +255,14 @@ class HSLSorting(SortingStrategy):
 
         return (hue, saturation, luminosity)
 
-    def _calculate_luminosity(self, biggest_value: int, smallest_value: int) -> int:
+    def _calculate_luminosity(self, biggest_value: int, smallest_value: int) -> float:
         sum_of_biggest_and_smallest = biggest_value + smallest_value
 
-        return round(sum_of_biggest_and_smallest / 510)
+        return sum_of_biggest_and_smallest / 510
 
     def _calculate_saturation(
         self, biggest_value: int, smallest_value: int, luminosity: float
-    ) -> int:
+    ) -> float:
         if luminosity > 0:
             difference_between_biggest_and_smallest = biggest_value - smallest_value
             difference_divided_by_255 = difference_between_biggest_and_smallest / 255
@@ -93,14 +278,14 @@ class HSLSorting(SortingStrategy):
             if one_minus_absolute_doubled_luminosity_value_minus_1 == 0:
                 one_minus_absolute_doubled_luminosity_value_minus_1 += 10 ** (-7)
 
-            return round(
+            return (
                 difference_divided_by_255
                 / one_minus_absolute_doubled_luminosity_value_minus_1
             )
 
-        return 0
+        return 0.0
 
-    def _calculate_hue(self, red: int, green: int, blue: int) -> int:
+    def _calculate_hue(self, red: int, green: int, blue: int) -> float:
         half_green = green / 2
         half_blue = blue / 2
         difference_from_ref_to_halfs = red - half_green - half_blue
@@ -113,10 +298,10 @@ class HSLSorting(SortingStrategy):
         angle = acos(cosine)
 
         if green >= blue:
-            return round(angle)
+            return angle
 
         full_circle_minus_angle = 360 - angle
-        return round(full_circle_minus_angle)
+        return full_circle_minus_angle
 
     def _calculate_squared_root_of_perfect_square(
         self, red: int, green: int, blue: int
@@ -137,6 +322,104 @@ class HSLSorting(SortingStrategy):
         )
 
         return sqrt(perfect_square)
+
+
+class LuminositySorting(SortingStrategy):
+    """Sorting strategy based on perceived luminosity"""
+
+    def sort(self, colors_to_sort: List[Color]) -> Tuple[Color, ...]:
+        """Sort a list of colors based on their perceived luminosity
+
+        Args:
+            colors_to_sort (List[Color]): the colors to be sorted
+
+        Returns:
+            Tuple[Color]: sorted set of colors
+        """
+        colors_to_sort.sort(key=self._get_luminosity)
+        return tuple(colors_to_sort)
+
+    def _get_luminosity(self, color: Color) -> float:
+        rgb = color.rgb
+        converter = RGBToLuminosityConverter()
+
+        return converter.convert(rgb)[0]
+
+
+class StepSorting(SortingStrategy):
+    """Step sorting strategy"""
+
+    def sort(self, colors_to_sort: List[Color]) -> Tuple[Color, ...]:
+        """Sort a list of colors based on their HSL and luminosity but splitting them by
+        steps
+
+        Args:
+            colors_to_sort (List[Color]): the colors to be sorted
+
+        Returns:
+            Tuple[Color]: sorted set of colors
+        """
+        colors_to_sort.sort(key=self._get_stepped_hsv_and_luminosity_values)
+        return tuple(colors_to_sort)
+
+    def _get_stepped_hsv_and_luminosity_values(
+        self, color: Color
+    ) -> Tuple[int, float, int]:
+        steps = 8
+
+        rgb = color.rgb
+        to_hsv_converter = RGBtoHSVConverter()
+        to_luminosity_converter = RGBToLuminosityConverter()
+
+        hue, _, value = to_hsv_converter.convert(rgb)
+        (luminosity,) = to_luminosity_converter.convert(rgb)
+
+        hue_as_percentage = hue / 360
+        stepped_hue = round(hue_as_percentage * steps)
+        stepped_value = round(value * steps)
+
+        return (stepped_hue, luminosity, stepped_value)
+
+
+class AlternatedStepSorting(SortingStrategy):
+    """Alternated step sorting strategy"""
+
+    def sort(self, colors_to_sort: List[Color]) -> Tuple[Color, ...]:
+        """Sort a list of colors based on their HSL and luminosity but splitting them by
+        steps
+
+        Args:
+            colors_to_sort (List[Color]): the colors to be sorted
+
+        Returns:
+            Tuple[Color]: sorted set of colors
+        """
+        colors_to_sort.sort(
+            key=self._get_stepped_alternatively_hsv_and_luminosity_values
+        )
+        return tuple(colors_to_sort)
+
+    def _get_stepped_alternatively_hsv_and_luminosity_values(
+        self, color: Color
+    ) -> Tuple[int, float, int]:
+        steps = 8
+
+        rgb = color.rgb
+        to_hsv_converter = RGBtoHSVConverter()
+        to_luminosity_converter = RGBToLuminosityConverter()
+
+        hue, _, value = to_hsv_converter.convert(rgb)
+        (luminosity,) = to_luminosity_converter.convert(rgb)
+
+        hue_as_percentage = hue / 360
+        stepped_hue = round(hue_as_percentage * steps)
+        stepped_value = round(value * steps)
+
+        if stepped_hue % 2 == 1:
+            stepped_value = steps - stepped_value
+            luminosity = steps - luminosity
+
+        return (stepped_hue, luminosity, stepped_value)
 
 
 class HillbertSorting(SortingStrategy):

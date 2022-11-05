@@ -9,6 +9,10 @@ class ColorFormat:
 class SortingStrategyName:
     """Constants for the sorting strategies"""
 
-    HILLBERT: str = "hillbert"
     RGB: str = "rgb"
+    HSV: str = "hsv"
     HSL: str = "hsl"
+    LUMINOSITY: str = "luminosity"
+    STEP: str = "step"
+    ALTERNATED_STEP: str = "step-alternated"
+    HILLBERT: str = "hillbert"
