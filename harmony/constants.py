@@ -1,4 +1,7 @@
-class ColorFormat:
+from enum import Enum
+
+
+class ColorFormat(str, Enum):
     """Contants for the color formats"""
 
     SAME_AS_INPUT: str = "input"
@@ -6,7 +9,7 @@ class ColorFormat:
     HEXCODE: str = "hexcode"
 
 
-class SortingStrategyName:
+class SortingStrategyName(str, Enum):
     """Constants for the sorting strategies"""
 
     RGB: str = "rgb"

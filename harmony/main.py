@@ -15,16 +15,10 @@ app = typer.Typer(pretty_exceptions_show_locals=False)
 @app.command()
 def sort_colors_from_file(
     file_path: str,
-    sorting_algorithm: str = SortingStrategyName.HILLBERT,
-    color_format: str = ColorFormat.SAME_AS_INPUT,
+    sorting_algorithm: SortingStrategyName = "hillbert",
+    color_format: ColorFormat = "input",
 ) -> None:
-    """Entry point for generating a file with the sorted colors
-
-    Args:
-        file_path (str): path to the file with the original set of colors
-        sorting_algorithm (str): algorithm to be used for sorting the colors
-        color_format (str): format of the colors to be writted to the file
-    """
+    """Entry point for generating a file with the sorted colors"""
     try:
         reader = ColorReader()
         sorter = ColorSorter(sorting_algorithm)
