@@ -1,6 +1,6 @@
 import os
 import re
-from typing import Dict, Iterator, List, Tuple, Type
+from typing import Dict, Iterator, List, TextIO, Tuple, Type
 
 from harmony.constants import ColorFormat, SortingStrategyName
 from harmony.exceptions import InvalidColorException, InvalidFileException
@@ -17,15 +17,16 @@ from harmony.service_layer.sorting_strategies import (
 )
 
 
-def get_final_file_path(source_file_path: str) -> str:
+def get_final_file_path(source_file: TextIO) -> str:
     """Return the path to the file with the processed data
 
     Args:
-        source_file_path (str): path to the original file
+        source_file (TextIO): original file
 
     Returns:
         str: path to the processed data file
     """
+    source_file_path = source_file.name
     index_of_extension = source_file_path.rfind(".")
 
     if index_of_extension >= 0:
@@ -38,7 +39,7 @@ def get_final_file_path(source_file_path: str) -> str:
 class ColorReader:
     """Service for reading colors from file"""
 
-    def extract_from_file(self, file_path: str) -> List[Color]:
+    def extract_from_file(self, colors_file: TextIO) -> List[Color]:
         """Extracts a list of colors from a file
 
         Args:
@@ -47,10 +48,7 @@ class ColorReader:
         Returns:
             List[Color]: list of colors extracted
         """
-        self._check_for_file_path(file_path)
-
-        with open(file_path, "r", encoding="utf8") as colors_file:
-            color_strings = colors_file.readlines()
+        color_strings = colors_file.readlines()
 
         return list(self._make_colors_list(color_strings))
 
@@ -156,8 +154,8 @@ class ColorSorter:
 
     strategy: SortingStrategy
 
-    def __init__(self, strategy_name: str):
-        strategy_dict: Dict[str, Type[SortingStrategy]] = {
+    def __init__(self, strategy_name: SortingStrategyName):
+        strategy_dict: Dict[SortingStrategyName, Type[SortingStrategy]] = {
             SortingStrategyName.RGB: RGBSorting,
             SortingStrategyName.HSV: HSVSorting,
             SortingStrategyName.HSL: HSLSorting,
@@ -184,7 +182,7 @@ class ColorSorter:
 class ColorWriter:
     """Service for writing colors to file"""
 
-    def __init__(self, color_format: str = ColorFormat.SAME_AS_INPUT):
+    def __init__(self, color_format: ColorFormat = ColorFormat.SAME_AS_INPUT):
         color_string_getter_dict = {
             ColorFormat.HEXCODE: self._get_hexcode_string,
             ColorFormat.RGB: self._get_rgb_string,
