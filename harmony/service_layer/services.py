@@ -1,9 +1,8 @@
-import os
 import re
 from typing import Dict, Iterator, List, TextIO, Tuple, Type
 
 from harmony.constants import ColorFormat, SortingStrategyName
-from harmony.exceptions import InvalidColorException, InvalidFileException
+from harmony.exceptions import InvalidColorException
 from harmony.models import RGB, Color
 from harmony.service_layer.sorting_strategies import (
     AlternatedStepSorting,
