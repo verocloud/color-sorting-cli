@@ -40,7 +40,7 @@ $ pip3 install --user harmony-{version}-py3-none-any.whl
 
 ### Create a colors file
 
- - The first step is to create a file where, every line is a color where the color is specified at the beginning of the line using the `(X, X, X)` format for RGB and `#XXX` or `#XXXXXX` for Hexcode. In this example we will use a file named `colors.txt` with the following content:
+ - The first step is to create a file in which, every line is a color and the color is specified at the beginning of the line using the `(X, X, X)` format for RGB and `#XXX` or `#XXXXXX` for Hexcode. In this example we will use a file named `colors.txt` with the following content:
 
 ```
 (49, 6, 210) Dark Blue
