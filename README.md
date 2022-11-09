@@ -1,6 +1,4 @@
-<p align="center">
-  <h1>Harmony</h1>
-</p>
+<h1 align="center">Harmony</h1>
 <p align="center">
     <em>Easily organize you color pallete</em>
 </p>
