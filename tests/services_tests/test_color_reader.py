@@ -52,18 +52,6 @@ class TestColorReader:
             expected_description_for_second_color == actual_description_for_second_color
         )
 
-    def test_extracting_colors_from_invalid_file(self) -> None:
-        """Test extracting colors from invalid file"""
-
-        def result():
-            self._when_file_is_passed("not-a-file")
-
-        self._then_should_raise_invalid_file(result)
-
-    def _then_should_raise_invalid_file(self, result: Callable[[], None]) -> None:
-        with pytest.raises(InvalidFileException):
-            result()
-
     def test_extracting_colors_from_invalid_format(self) -> None:
         arrangements = self._given_file_with_invalid_formats()
 
@@ -84,7 +72,8 @@ class TestColorReader:
 
     def _when_file_is_passed(self, file_path: str) -> List[Color]:
         extractor = ColorReader()
-        return extractor.extract_from_file(file_path)
+        with open(file_path) as file:
+            return extractor.extract_from_file(file)
 
     def _then_should_raise_invalid_color(self, result: Callable[[], None]):
         with pytest.raises(InvalidColorException):

@@ -53,7 +53,7 @@ class TestColorsFileEntrypoint:
         return runner.invoke(app, [arrangements])
 
     def _then_should_show_error_message(self, results: Result, source_file: str):
-        expected_exit_code = 1
+        expected_exit_code = 2
         actual_exit_code = results.exit_code
 
         assert expected_exit_code == actual_exit_code

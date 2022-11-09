@@ -52,10 +52,6 @@ class ColorReader:
 
         return list(self._make_colors_list(color_strings))
 
-    def _check_for_file_path(self, path: str) -> None:
-        if not os.path.exists(path):
-            raise InvalidFileException(f"{path} does not exists")
-
     def _make_colors_list(self, color_strings: List[str]) -> Iterator[Color]:
 
         for color_string in color_strings:
