@@ -10,6 +10,7 @@ from harmony.models import RGB, Color
 class ColorFormatConverter(ABC):
     """Interface for color format converters"""
 
+    @abstractmethod
     def convert(self, rgb: RGB) -> Tuple[float, ...]:
         """Converts RGB to other color format"""
 
