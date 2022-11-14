@@ -17,6 +17,7 @@ def sort_colors_from_file(
     colors_file: typer.FileText,
     sorting_algorithm: SortingStrategyName = "hillbert",  # type: ignore
     color_format: ColorFormat = "input",  # type: ignore
+    suffix: str = "_sorted",
 ) -> None:
     """Entry point for generating a file with the sorted colors"""
     try:
@@ -27,7 +28,7 @@ def sort_colors_from_file(
         colors = reader.extract_from_file(colors_file)
         sorted_colors = sorter.sort(colors)
 
-        final_file_path = get_final_file_path(colors_file)
+        final_file_path = get_final_file_path(colors_file, sorting_algorithm, suffix)
         writer.write_colors_to_file(sorted_colors, final_file_path)
 
         rich.print(f"Colors sorted and saved to {final_file_path}")

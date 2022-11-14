@@ -16,7 +16,9 @@ from harmony.service_layer.sorting_strategies import (
 )
 
 
-def get_final_file_path(source_file: TextIO) -> str:
+def get_final_file_path(
+    source_file: TextIO, sorting_strategy: SortingStrategyName, suffix: str
+) -> str:
     """Return the path to the file with the processed data
 
     Args:
@@ -30,9 +32,12 @@ def get_final_file_path(source_file: TextIO) -> str:
 
     if index_of_extension >= 0:
         extension = source_file_path[index_of_extension:]
-        return f"{source_file_path[:index_of_extension]}_sorted{extension}"
+        return (
+            f"{source_file_path[:index_of_extension]}_{sorting_strategy}{suffix}"
+            + extension
+        )
 
-    return f"{source_file_path}_sorted"
+    return f"{source_file_path}_{sorting_strategy}"
 
 
 class ColorReader:

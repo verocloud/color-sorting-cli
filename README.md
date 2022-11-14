@@ -55,7 +55,7 @@ $ pip3 install --user harmony-{version}-py3-none-any.whl
 $ harmony color.txt
 ```
 
-- After that, a file named `colors_sorted.txt` should be generated in the same directory with the following content:
+- After that, a file named `colors_hillbert_sorted.txt` should be generated in the same directory with the following content:
 
 ```
 (201, 118, 6) Orange
@@ -79,5 +79,7 @@ $ harmony color.txt
   * input: The output format will be the same as the input format;
   * rgb: The output for all colors will be in RGB format;
   * hexcode: The output for all colors will be in Hexcode format;
+
+* --suffix [default: _sorted]: determine the suffix of the output file;
 
 * --help: display the options;
