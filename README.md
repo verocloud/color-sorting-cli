@@ -80,6 +80,10 @@ $ harmony color.txt
   * rgb: The output for all colors will be in RGB format;
   * hexcode: The output for all colors will be in Hexcode format;
 
+* --direction [default: backward]: determine the direction of the sorting:
+  * forward: the colors will be sorted in the natural order of the algorithms
+  * backward: the colors will be sorted in the reversed order of the algorithms
+
 * --suffix [default: _sorted]: determine the suffix of the output file;
 
 * --help: display the options;
