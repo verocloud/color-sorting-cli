@@ -1,7 +1,7 @@
 import re
 from typing import Dict, Iterator, List, TextIO, Tuple, Type
 
-from harmony.constants import ColorFormat, SortingStrategyName
+from harmony.constants import ColorFormat, Directions, SortingStrategyName
 from harmony.exceptions import InvalidColorException
 from harmony.models import RGB, Color
 from harmony.service_layer.sorting_strategies import (
@@ -167,7 +167,9 @@ class ColorSorter:
 
         self.strategy = strategy_dict[strategy_name]()
 
-    def sort(self, colors_to_sort: List[Color]) -> Tuple[Color, ...]:
+    def sort(
+        self, colors_to_sort: List[Color], direction: Directions
+    ) -> Tuple[Color, ...]:
         """Sort a list of colors
 
         Args:
@@ -176,7 +178,20 @@ class ColorSorter:
         Returns:
             Tuple[Color]: sorted set of colors
         """
-        return self.strategy.sort(colors_to_sort)
+        direction_dict = {
+            Directions.FORWARD: lambda: self.strategy.sort(colors_to_sort),
+            Directions.BACKWARD: lambda: self._sort_backwards(colors_to_sort),
+        }
+        return direction_dict[direction]()
+
+    def _sort_backwards(self, colors_to_sort: List[Color]) -> Tuple[Color, ...]:
+        sorted_colors = self.strategy.sort(colors_to_sort)
+        colors_sorted_backwards: List[Color] = list()
+
+        for color in reversed(sorted_colors):
+            colors_sorted_backwards.append(color)
+
+        return tuple(colors_sorted_backwards)
 
 
 class ColorWriter:
