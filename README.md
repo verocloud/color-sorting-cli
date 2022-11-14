@@ -64,10 +64,20 @@ $ harmony color.txt
 ```
 
 
-## Parameters
+## Options
 
-For more information about the parameters of the CLI, you can run the following command:
+* --sorting-algorithm [default: hillbert]: determine which algorithm should be used to sort the colors:
+  * rgb: Sort the colors based on their RGB values;
+  * hsv: Sort the colors based on their HSV values;
+  * hsl: Sort the colors based on their HSL values;
+  * luminosity: Sort the colors based on their perceived luminosity;
+  * step: Sort the colors based on their hue, luminosity and *value* splitting them in 8 steps and sorting them separately;
+  * step-alternated: Same as step, but the luminosity step is alternated forward and backward, bringing a sensation of continuity;
+  * hillbert: Sort the colors based on their proximity in Hillbert Curves calculated on top of the RGB values;
 
-```
-$ harmony --help
-```
+* --color-format [default: input]: determine which format to output the colors:
+  * input: The output format will be the same as the input format;
+  * rgb: The output for all colors will be in RGB format;
+  * hexcode: The output for all colors will be in Hexcode format;
+
+* --help: display the options;
