@@ -27,21 +27,11 @@ class TestColorsFileEntrypoint:
         expected_exit_code = 0
         actual_exit_code = results.exit_code
 
-        expected_final_file_path = self._get_final_file_path(source_file)
-        expected_message = f"Colors sorted and saved to {expected_final_file_path}"
+        expected_message = "Colors sorted and saved to "
         actual_message = results.stdout
 
         assert expected_exit_code == actual_exit_code
         assert expected_message in actual_message
-
-    def _get_final_file_path(self, source_file_path: str) -> str:
-        index_of_extension = source_file_path.rfind(".")
-
-        if index_of_extension >= 0:
-            extension = source_file_path[index_of_extension:]
-            return f"{source_file_path[:index_of_extension]}_sorted{extension}"
-
-        return f"{source_file_path}_sorted"
 
     def test_passing_invalid_file(self, runner: CliRunner):
         """Test passing invalid file to CLI"""
