@@ -19,7 +19,7 @@ Built over:
 
 ## Installing
 
-For installing the CLI, you can download the `.whl` file from [here](#) and run the following command:
+For installing the CLI, you can download the `.whl` file from [here](https://github.com/AdrianSimionov/color-sorting-cli/releases/download/0.2.1/harmony-0.2.1-py3-none-any.whl) and run the following command:
 
 - On Windows:
 ```
