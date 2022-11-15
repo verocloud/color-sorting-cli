@@ -9,6 +9,13 @@ class ColorFormat(str, Enum):
     HEXCODE: str = "hexcode"
 
 
+class Directions(str, Enum):
+    """Constants for the direction of the sorting"""
+
+    FORWARD: str = "forward"
+    BACKWARD: str = "backward"
+
+
 class SortingStrategyName(str, Enum):
     """Constants for the sorting strategies"""
 
