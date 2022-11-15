@@ -1,7 +1,7 @@
 import rich
 import typer
 
-from harmony.constants import ColorFormat, SortingStrategyName, Directions
+from harmony.constants import ColorFormat, Directions, SortingStrategyName
 from harmony.service_layer.services import (
     ColorReader,
     ColorSorter,
