@@ -186,7 +186,7 @@ class ColorSorter:
 
     def _sort_backwards(self, colors_to_sort: List[Color]) -> Tuple[Color, ...]:
         sorted_colors = self.strategy.sort(colors_to_sort)
-        colors_sorted_backwards: List[Color] = list()
+        colors_sorted_backwards: List[Color] = []
 
         for color in reversed(sorted_colors):
             colors_sorted_backwards.append(color)
