@@ -1,10 +1,11 @@
 import os
 import random
 
+AMOUNT_OF_COLORS = 6
 file_content: str = ""
 
 
-for line in range(1000):
+for line in range(AMOUNT_OF_COLORS):
     red = random.randint(0, 255)
     green = random.randint(0, 255)
     blue = random.randint(0, 255)

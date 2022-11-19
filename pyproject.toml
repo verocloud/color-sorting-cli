@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "harmony"
-version = "0.2.1"
+version = "0.3.0"
 description = "CLI for sorting colors"
 authors = ["Lucas Calegario <lucas.c.calegario@outlook.com>"]
 readme = "README.md"

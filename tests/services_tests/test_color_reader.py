@@ -15,10 +15,13 @@ class TestColorReader:
     def test_extract_from_file(self) -> None:
         """Test extracting the colors from a valid file"""
         arrangements = self._given_file_path()
-        result = self._when_file_is_passed(arrangements)
-        self._then_should_extract_colors(result)
 
-        os.remove(arrangements)
+        try:
+            result = self._when_file_is_passed(arrangements)
+            self._then_should_extract_colors(result)
+
+        finally:
+            os.remove(arrangements)
 
     def _given_file_path(self) -> str:
         temporary_file_path = get_temporary_file_path()
@@ -55,12 +58,15 @@ class TestColorReader:
     def test_extracting_colors_from_invalid_format(self) -> None:
         arrangements = self._given_file_with_invalid_formats()
 
-        def results() -> None:
-            self._when_file_is_passed(arrangements)
+        try:
 
-        self._then_should_raise_invalid_color(results)
+            def results() -> None:
+                self._when_file_is_passed(arrangements)
 
-        os.remove(arrangements)
+            self._then_should_raise_invalid_color(results)
+
+        finally:
+            os.remove(arrangements)
 
     def _given_file_with_invalid_formats(self) -> str:
         temporary_file_path = get_temporary_file_path()
