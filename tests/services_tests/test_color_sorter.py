@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
 from harmony.constants import ColorFormat, Directions, SortingStrategyName
 from harmony.models import RGB, Color

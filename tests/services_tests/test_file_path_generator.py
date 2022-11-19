@@ -14,12 +14,19 @@ class TestFilePathGenerator:
         arrangement = self._given_options()
         temporary_file_path = arrangement.get("source_file_path", "not-a-file")
 
+<<<<<<< HEAD
         try:
             result = self._when_generator_is_called(arrangement)
             self._then_should_generate_path(temporary_file_path, result)
 
         finally:
             os.remove(temporary_file_path)
+=======
+        result = self._when_generator_is_called(arrangement)
+        self._then_should_generate_path(temporary_file_path, result)
+
+        os.remove(temporary_file_path)
+>>>>>>> development
 
     def _given_options(self) -> Dict[str, object]:
         source_file_path = get_temporary_file_path()
