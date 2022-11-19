@@ -19,7 +19,11 @@ Built over:
 
 ## Installing
 
+<<<<<<< HEAD
 For installing the CLI, you can download the `.whl` file from [here](https://github.com/AdrianSimionov/color-sorting-cli/releases/download/0.3.0/harmony-0.3.0-py3-none-any.whl) and run the following command:
+=======
+For installing the CLI, you can download the `.whl` file from [here](https://github.com/AdrianSimionov/color-sorting-cli/releases/download/0.2.1/harmony-0.2.1-py3-none-any.whl) and run the following command:
+>>>>>>> main
 
 - On Windows:
 ```
@@ -64,6 +68,7 @@ $ harmony color.txt
 ```
 
 
+<<<<<<< HEAD
 ## Commands
 
 ### sort
@@ -79,6 +84,19 @@ The `sort` command sorts a text according to the [above specification](#create-a
   * step-alternated: Same as step, but the luminosity step is alternated forward and backward, bringing a sensation of continuity;
   * hillbert: Sort the colors based on their proximity in Hillbert Curves calculated on top of the RGB values;
 
+=======
+## Options
+
+* --sorting-algorithm [default: hillbert]: determine which algorithm should be used to sort the colors:
+  * rgb: Sort the colors based on their RGB values;
+  * hsv: Sort the colors based on their HSV values;
+  * hsl: Sort the colors based on their HSL values;
+  * luminosity: Sort the colors based on their perceived luminosity;
+  * step: Sort the colors based on their hue, luminosity and *value* splitting them in 8 steps and sorting them separately;
+  * step-alternated: Same as step, but the luminosity step is alternated forward and backward, bringing a sensation of continuity;
+  * hillbert: Sort the colors based on their proximity in Hillbert Curves calculated on top of the RGB values;
+
+>>>>>>> main
 * --color-format [default: input]: determine which format to output the colors:
   * input: The output format will be the same as the input format;
   * rgb: The output for all colors will be in RGB format;
@@ -90,6 +108,7 @@ The `sort` command sorts a text according to the [above specification](#create-a
 
 * --suffix [default: _sorted]: determine the suffix of the output file;
 
+<<<<<<< HEAD
 * --help: display the options;
 
 
@@ -98,3 +117,6 @@ The `sort` command sorts a text according to the [above specification](#create-a
 `toase` command allow to convert a text file that follows the [above specification](#create-a-colors-file) to a `.ase` file. It receives a text file and provide the following options:
 
 * --palette_name [default: Palette {UUID4} sorted by Harmony]: determine the name of the palette to be written to the `.ase` file;
+=======
+* --help: display the options;
+>>>>>>> main
