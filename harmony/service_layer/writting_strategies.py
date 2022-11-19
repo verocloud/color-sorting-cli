@@ -1,4 +1,3 @@
-import uuid
 from abc import ABC, abstractmethod
 from typing import Tuple
 
@@ -69,10 +68,6 @@ class ASEWritting(WrittingStrategy):
 
     def __init__(self, palette_name: str) -> None:
         self.palette_name = palette_name
-        was_palette_name_set = len(self.palette_name) > 0
-
-        if not was_palette_name_set:
-            self.palette_name = f"Palette {uuid.uuid4()} sorted by Harmony"
 
     def write(self, colors: Tuple[Color, ...], final_file_path: str):
         """Write colors to a ".ase" file
@@ -176,7 +171,5 @@ class ASEWritting(WrittingStrategy):
         rgb_bytes.extend(blue_bytes)
 
         rgb_bytes.extend(b"\x00\x02")
-
-        print(rgb_bytes)
 
         return rgb_bytes

@@ -1,4 +1,9 @@
 from enum import Enum
+import uuid
+
+
+class DefaultParameters(str, Enum):
+    PALETTE_NAME: str = f"Palette {uuid.uuid4()} sorted by Harmony"
 
 
 class ColorFormat(str, Enum):

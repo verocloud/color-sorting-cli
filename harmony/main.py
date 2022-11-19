@@ -1,7 +1,12 @@
 import rich
 import typer
 
-from harmony.constants import ColorFormat, Directions, SortingStrategyName
+from harmony.constants import (
+    ColorFormat,
+    DefaultParameters,
+    Directions,
+    SortingStrategyName,
+)
 from harmony.service_layer.services import (
     ColorReader,
     ColorSorter,
@@ -43,7 +48,9 @@ def sort(
 
 
 @app.command()
-def toase(colors_file: typer.FileText, palette_name: str = ""):
+def toase(
+    colors_file: typer.FileText, palette_name: str = DefaultParameters.PALETTE_NAME
+):
     """Command to convert a text file into a ".ase" file"""
     try:
         reader = ColorReader()
