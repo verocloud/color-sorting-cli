@@ -14,10 +14,13 @@ from harmony.service_layer.sorting_strategies import (
     SortingStrategy,
     StepSorting,
 )
+from harmony.service_layer.writting_strategies import WrittingStrategy
 
 
 def get_final_file_path(
-    source_file: TextIO, sorting_strategy: SortingStrategyName, suffix: str
+    source_file: TextIO,
+    sorting_strategy: SortingStrategyName,
+    suffix: str,
 ) -> str:
     """Return the path to the file with the processed data
 
@@ -29,8 +32,9 @@ def get_final_file_path(
     """
     source_file_path = source_file.name
     index_of_extension = source_file_path.rfind(".")
+    have_extension = index_of_extension >= 0
 
-    if index_of_extension >= 0:
+    if have_extension:
         extension = source_file_path[index_of_extension:]
         return (
             f"{source_file_path[:index_of_extension]}_{sorting_strategy}{suffix}"
@@ -38,6 +42,27 @@ def get_final_file_path(
         )
 
     return f"{source_file_path}_{sorting_strategy}"
+
+
+def get_ase_file_path(
+    source_file: TextIO,
+) -> str:
+    """Return the path to the converted ".ase" file
+
+    Args:
+        source_file (TextIO): original file
+
+    Returns:
+        str: path to the converted file
+    """
+    source_file_path = source_file.name
+    index_of_extension = source_file_path.rfind(".")
+    have_extension = index_of_extension >= 0
+
+    if have_extension:
+        return f"{source_file_path[:index_of_extension]}.ase"
+
+    return f"{source_file_path}.ase"
 
 
 class ColorReader:
@@ -186,7 +211,7 @@ class ColorSorter:
 
     def _sort_backwards(self, colors_to_sort: List[Color]) -> Tuple[Color, ...]:
         sorted_colors = self.strategy.sort(colors_to_sort)
-        colors_sorted_backwards: List[Color] = list()
+        colors_sorted_backwards: List[Color] = []
 
         for color in reversed(sorted_colors):
             colors_sorted_backwards.append(color)
@@ -197,42 +222,15 @@ class ColorSorter:
 class ColorWriter:
     """Service for writing colors to file"""
 
-    def __init__(self, color_format: ColorFormat = ColorFormat.SAME_AS_INPUT):
-        color_string_getter_dict = {
-            ColorFormat.HEXCODE: self._get_hexcode_string,
-            ColorFormat.RGB: self._get_rgb_string,
-            ColorFormat.SAME_AS_INPUT: self._get_color_as_input_format,
-        }
+    def __init__(self, strategy: WrittingStrategy):
+        self._strategy = strategy
 
-        self._get_color_string = color_string_getter_dict[color_format]
-
-    def write_colors_to_file(self, colors: Tuple[Color, ...], final_file_path: str):
+    def write(self, colors: Tuple[Color, ...], final_file_path: str):
         """Write colors to passed file
 
         Args:
-            colors (Tuple[Color]): colors to be written
+            colors (Tuple[Color, ...]): colors to be written
             final_file_path (str): path to the file where the colors will be passed
         """
 
-        file_content: str = ""
-
-        for color in colors:
-            file_content += self._get_color_string(color)
-
-        with open(final_file_path, "w", encoding="utf8") as final_file:
-            final_file.write(file_content)
-
-    def _get_color_as_input_format(self, color: Color) -> str:
-        is_input_format_as_hexcode = color.original_format == ColorFormat.HEXCODE
-
-        if is_input_format_as_hexcode:
-            return self._get_hexcode_string(color)
-
-        return self._get_rgb_string(color)
-
-    def _get_hexcode_string(self, color: Color) -> str:
-        return f"{color.hexcode} {color.description}\n"
-
-    def _get_rgb_string(self, color: Color) -> str:
-        rgb = color.rgb
-        return f"({rgb.red}, {rgb.green}, {rgb.blue}) {color.description}\n"
+        self._strategy.write(colors, final_file_path)

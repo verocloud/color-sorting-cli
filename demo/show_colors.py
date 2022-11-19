@@ -1,16 +1,19 @@
 import os
+import sys
 from tkinter import Canvas, Misc, Tk
 from dataclasses import dataclass
 from typing import List, Tuple
 
 TOTAL_WIDTH = 1000
+FILE_PATH = "colors_file_hsl_sorted.txt"
+AMOUNT_OF_COLORS = 6
 
 
 def get_colors_file():
     this_directory_path = os.path.dirname(__file__)
     this_directory_absolute_path = os.path.abspath(this_directory_path)
 
-    return os.path.join(this_directory_absolute_path, "colors_file_sorted.txt")
+    return os.path.join(this_directory_absolute_path, FILE_PATH)
 
 
 @dataclass
@@ -34,7 +37,7 @@ class ColorSliceSetFactory:
     def _get_color_slices(self, color_strings: List[str]) -> Tuple[ColorSliceData, ...]:
         color_slices: List[ColorSliceData] = list()
         slice_start: float = 0
-        slice_end: float = (1 / 1000) * TOTAL_WIDTH
+        slice_end: float = (1 / AMOUNT_OF_COLORS) * TOTAL_WIDTH
 
         for color_string in color_strings:
             hexcode = color_string.replace("\n", "")
@@ -45,8 +48,8 @@ class ColorSliceSetFactory:
             )
             color_slices.append(new_color_slice)
 
-            slice_start += (1 / 1000) * TOTAL_WIDTH
-            slice_end += (1 / 1000) * TOTAL_WIDTH
+            slice_start += (1 / AMOUNT_OF_COLORS) * TOTAL_WIDTH
+            slice_end += (1 / AMOUNT_OF_COLORS) * TOTAL_WIDTH
 
         return tuple(color_slices)
 

@@ -19,7 +19,7 @@ Built over:
 
 ## Installing
 
-For installing the CLI, you can download the `.whl` file from [here](#) and run the following command:
+For installing the CLI, you can download the `.whl` file from [here](https://github.com/AdrianSimionov/color-sorting-cli/releases/download/0.3.0/harmony-0.3.0-py3-none-any.whl) and run the following command:
 
 - On Windows:
 ```
@@ -64,7 +64,11 @@ $ harmony color.txt
 ```
 
 
-## Options
+## Commands
+
+### sort
+
+The `sort` command sorts a text according to the [above specification](#create-a-colors-file). It receives a text file path and provides the following options:
 
 * --sorting-algorithm [default: hillbert]: determine which algorithm should be used to sort the colors:
   * rgb: Sort the colors based on their RGB values;
@@ -87,3 +91,10 @@ $ harmony color.txt
 * --suffix [default: _sorted]: determine the suffix of the output file;
 
 * --help: display the options;
+
+
+### toase
+
+`toase` command allow to convert a text file that follows the [above specification](#create-a-colors-file) to a `.ase` file. It receives a text file and provide the following options:
+
+* --palette_name [default: Palette {UUID4} sorted by Harmony]: determine the name of the palette to be written to the `.ase` file;
