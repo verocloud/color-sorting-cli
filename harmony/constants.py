@@ -1,8 +1,15 @@
+import uuid
 from enum import Enum
 
 
+class DefaultParameters(str, Enum):
+    """Constants for the default subjective parameters"""
+
+    PALETTE_NAME: str = f"Palette {uuid.uuid4()} sorted by Harmony"
+
+
 class ColorFormat(str, Enum):
-    """Contants for the color formats"""
+    """Constants for the color formats"""
 
     SAME_AS_INPUT: str = "input"
     RGB: str = "rgb"
