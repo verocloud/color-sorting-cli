@@ -48,11 +48,12 @@ $ pip3 install --user harmony-{version}-py3-none-any.whl
 (201, 118, 6) Orange
 ```
 
+### Sort the colors
 
 - Now we will run the following command:
 
 ```
-$ harmony color.txt
+$ harmony sort color.txt
 ```
 
 - After that, a file named `colors_hillbert_sorted.txt` should be generated in the same directory with the following content:
