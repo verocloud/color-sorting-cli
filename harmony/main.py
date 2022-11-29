@@ -53,6 +53,13 @@ def sort(
 
 
 def convert_txt_file(colors_file: typer.FileText, writing_strategy: WritingStrategy):
+    """Convert the text file using the passed writing strategy
+
+    Args:
+        colors_file (typer.FileText): file to be converted
+        writing_strategy (WritingStrategy): strategy to use when writing the new file
+    """
+
     reader = ColorReader()
     writer = ColorWriter(writing_strategy)
 
