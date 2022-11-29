@@ -232,7 +232,7 @@ class CLRWriting(WritingStrategy):
 
         Raises:
             InvalidCLRFileException: when a CLR file is tried to be written with more
-            than 255 colors
+            than 255 colors or less then 1 color
         """
         file_content = bytearray()
         file_start = self._get_file_start()
