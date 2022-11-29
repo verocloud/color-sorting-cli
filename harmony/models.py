@@ -9,6 +9,9 @@ class RGB:
     green: int
     blue: int
 
+    def __str__(self):
+        return f"RGB({self.red}, {self.green}, {self.blue})"
+
 
 @dataclass
 class Color:

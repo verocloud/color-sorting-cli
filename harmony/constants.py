@@ -33,3 +33,10 @@ class SortingStrategyName(str, Enum):
     STEP: str = "step"
     ALTERNATED_STEP: str = "step-alternated"
     HILLBERT: str = "hillbert"
+
+
+class ByteOrder(str, Enum):
+    """Constants for the byte orders"""
+
+    LITTLE: str = "little"
+    BIG: str = "big"

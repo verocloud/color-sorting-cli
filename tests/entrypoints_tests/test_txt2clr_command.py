@@ -8,8 +8,8 @@ from harmony.main import app
 from tests.helpers import get_temporary_file_path
 
 
-class TestTXT2ASECommand:
-    """Tests for the "txt2ase" command"""
+class TestSortCommand:
+    """Tests for the "txt2clr" command"""
 
     @pytest.fixture
     def runner(self) -> CliRunner:
@@ -27,7 +27,12 @@ class TestTXT2ASECommand:
             os.remove(arrangements)
 
     def _given_valid_file(self) -> str:
-        return get_temporary_file_path()
+        temporary_file_path = get_temporary_file_path()
+
+        with open(temporary_file_path, "w", encoding="utf8") as file:
+            file.write("(12, 132, 0) some color")
+
+        return temporary_file_path
 
     def _then_should_show_success_message(self, results: Result):
         expected_exit_code = 0
@@ -46,7 +51,7 @@ class TestTXT2ASECommand:
         self._then_should_show_error_message(results, arrangements)
 
     def _when_file_is_sent(self, runner: CliRunner, arrangements: str) -> Result:
-        return runner.invoke(app, ["txt2ase", arrangements])
+        return runner.invoke(app, ["txt2clr", arrangements])
 
     def _then_should_show_error_message(self, results: Result, source_file: str):
         expected_exit_code = 2
