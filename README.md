@@ -94,9 +94,9 @@ The `sort` command sorts a text according to the [above specification](#create-a
 * --help: display the options;
 
 
-### toase
+### txt2ase
 
-`toase` command allow to convert a text file that follows the [above specification](#create-a-colors-file) to a `.ase` file. It receives a text file and provide the following options:
+`txt2ase` command allow to convert a text file that follows the [above specification](#create-a-colors-file) to a `.ase` file. It receives a text file and provide the following options:
 
 * --palette_name [default: Palette {UUID4} sorted by Harmony]: determine the name of the palette to be written to the `.ase` file;
 
