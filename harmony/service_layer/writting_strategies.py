@@ -153,7 +153,7 @@ class ASEWriting(WritingStrategy):
             )
 
             rgb_bytes = self._convert_rgb_to_bytes(color.rgb)
-            
+
             rgb_convertion_log_data = {
                 "rgb": str(color.rgb),
                 "rgb_bytes": rgb_bytes,
@@ -293,7 +293,7 @@ class CLRWriting(WritingStrategy):
             color_count_byte_case_one_byte = color_count.to_bytes(1, "little")
             return bytearray(color_count_byte_case_one_byte)
 
-        color_count_bytes = color_count.to_bytes(2, self.BYTE_ORDER)
+        color_count_bytes = color_count.to_bytes(2, "little")
 
         color_count_data_bytes = bytearray()
         color_count_data_bytes.extend(self.INTEGER_16_BYTE)
