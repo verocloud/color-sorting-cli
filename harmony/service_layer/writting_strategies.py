@@ -209,17 +209,15 @@ class ASEWriting(WritingStrategy):
 class CLRWriting(WritingStrategy):
     """Writting strategy that results into an ".clr" file"""
 
-    # TODO change the color count for signed integer and make it change to little endian
-    # 16-bit integer and the count overcomes 127 colors
-
     EXTENSION = "clr"
 
     CLASS_DECLARATION_BYTES = b"\x84\x84\x84"
     INHERITANCE_DECLARATION_BYTES = b"\x84\x84"
     NULL_BYTE = b"\x00"
     FLOAT_BYTE = b"\x83"
+    INTEGER_16_BYTE = b"\x81"
     END_OF_DATA_BYTE = b"\x86"
-    FLOAT_BYTE_ORDER = ByteOrder.LITTLE
+    BYTE_ORDER = ByteOrder.LITTLE
     MAX_DIFFERENCE_FOR_COMPARING_FLOATS = 10 ^ (-3)
 
     def __init__(self) -> None:
@@ -234,8 +232,8 @@ class CLRWriting(WritingStrategy):
             final_file_path (str): path to the file where the colors will be passed
 
         Raises:
-            InvalidCLRFileException: when a CLR file is tried to be written with more
-            than 255 colors or less then 1 color
+            InvalidCLRFileException: when a CLR file is tried to be written with less
+            then 1 color
         """
         file_content = bytearray()
         file_start = self._get_file_start()
@@ -273,13 +271,13 @@ class CLRWriting(WritingStrategy):
         return file_start_bytes
 
     def _get_color_count_chunk(self, color_count: int) -> bytearray:
-        is_color_count_valid = 0 < color_count <= 255
+        is_color_count_valid = color_count > 0
 
         if is_color_count_valid:
             color_chunk = bytearray()
 
             colors_count_chunk_bytes = b"\x84\x02\x40\x69\x85"
-            colors_count_byte = color_count.to_bytes(1, "little")
+            colors_count_byte = self._get_color_count_bytes(color_count)
 
             color_chunk.extend(colors_count_chunk_bytes)
             color_chunk.extend(colors_count_byte)
@@ -287,8 +285,21 @@ class CLRWriting(WritingStrategy):
             return color_chunk
 
         raise InvalidCLRFileException(
-            f"CLR files must have between one and 255 colors, {color_count} was passed"
+            f"CLR files must have at least one color, {color_count} was passed"
         )
+
+    def _get_color_count_bytes(self, color_count: int) -> bytearray:
+        if color_count <= 127:
+            color_count_byte_case_one_byte = color_count.to_bytes(1, "little")
+            return bytearray(color_count_byte_case_one_byte)
+
+        color_count_bytes = color_count.to_bytes(2, self.BYTE_ORDER)
+
+        color_count_data_bytes = bytearray()
+        color_count_data_bytes.extend(self.INTEGER_16_BYTE)
+        color_count_data_bytes.extend(color_count_bytes)
+
+        return color_count_data_bytes
 
     def _declare_map_value_type(self) -> bytearray:
         map_value_type_bytes = bytearray()
@@ -415,9 +426,7 @@ class CLRWriting(WritingStrategy):
         if is_equal_to_zero:
             return bytearray(b"\x00")
 
-        component_value_bytes = float_to_bytes(
-            component_as_decimal, self.FLOAT_BYTE_ORDER
-        )
+        component_value_bytes = float_to_bytes(component_as_decimal, self.BYTE_ORDER)
 
         component_bytes = bytearray(self.FLOAT_BYTE)
         component_bytes.extend(component_value_bytes)
