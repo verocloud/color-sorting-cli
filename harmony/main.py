@@ -48,8 +48,9 @@ def sort(
 
 
 @app.command()
-def toase(
-    colors_file: typer.FileText, palette_name: str = DefaultParameters.PALETTE_NAME
+def txt2ase(
+    colors_file: typer.FileText,
+    palette_name: str = DefaultParameters.PALETTE_NAME.value,
 ):
     """Command to convert a text file into a ".ase" file"""
     try:

@@ -8,7 +8,7 @@ from harmony.main import app
 from tests.helpers import get_temporary_file_path
 
 
-class TestSortCommand:
+class TestTXT2ASECommand:
     @pytest.fixture
     def runner(self) -> CliRunner:
         return CliRunner()
@@ -44,7 +44,7 @@ class TestSortCommand:
         self._then_should_show_error_message(results, arrangements)
 
     def _when_file_is_sent(self, runner: CliRunner, arrangements: str) -> Result:
-        return runner.invoke(app, ["toase", arrangements])
+        return runner.invoke(app, ["txt2ase", arrangements])
 
     def _then_should_show_error_message(self, results: Result, source_file: str):
         expected_exit_code = 2

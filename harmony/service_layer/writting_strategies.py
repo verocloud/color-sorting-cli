@@ -130,9 +130,13 @@ class ASEWritting(WrittingStrategy):
             color_bytes.extend(b"\x00\x01\x00\x00")
 
             description_bytes = self._get_description_bytes(color.description)
-            color_bytes.extend(description_bytes)
-
             rgb_bytes = self._convert_rgb_to_bytes(color.rgb)
+
+            color_chunk_size = len(description_bytes) + len(rgb_bytes)
+            color_chunk_size_bytes = color_chunk_size.to_bytes(2, "big")
+
+            color_bytes.extend(color_chunk_size_bytes)
+            color_bytes.extend(description_bytes)
             color_bytes.extend(rgb_bytes)
 
         return color_bytes
@@ -141,11 +145,7 @@ class ASEWritting(WrittingStrategy):
         description_bytes = bytearray()
 
         description_array = bytearray(bytes(description, encoding="utf_16_be"))
-        description_array.extend(b"\x00\x00")
-
-        color_description_size = len(description_array)
-        color_description_size_bytes = color_description_size.to_bytes(2, "big")
-        description_bytes.extend(color_description_size_bytes)
+        description_array.extend(b"\x00\x00\x00\x00")
 
         color_description_count = int(len(description_array) / 2)
         color_description_count_bytes = color_description_count.to_bytes(2, "big")
