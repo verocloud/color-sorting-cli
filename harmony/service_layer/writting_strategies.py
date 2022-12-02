@@ -209,6 +209,9 @@ class ASEWriting(WritingStrategy):
 class CLRWriting(WritingStrategy):
     """Writting strategy that results into an ".clr" file"""
 
+    # TODO change the color count for signed integer and make it change to little endian
+    # 16-bit integer and the count overcomes 127 colors
+
     EXTENSION = "clr"
 
     CLASS_DECLARATION_BYTES = b"\x84\x84\x84"
