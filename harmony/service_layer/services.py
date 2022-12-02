@@ -14,7 +14,7 @@ from harmony.service_layer.sorting_strategies import (
     SortingStrategy,
     StepSorting,
 )
-from harmony.service_layer.writting_strategies import WrittingStrategy
+from harmony.service_layer.writting_strategies import WritingStrategy
 
 
 def get_final_file_path(
@@ -44,10 +44,8 @@ def get_final_file_path(
     return f"{source_file_path}_{sorting_strategy}"
 
 
-def get_ase_file_path(
-    source_file: TextIO,
-) -> str:
-    """Return the path to the converted ".ase" file
+def get_path_with_extension(source_file: TextIO, extension: str) -> str:
+    """Return the path to file with the given extension
 
     Args:
         source_file (TextIO): original file
@@ -55,14 +53,15 @@ def get_ase_file_path(
     Returns:
         str: path to the converted file
     """
+
     source_file_path = source_file.name
     index_of_extension = source_file_path.rfind(".")
     have_extension = index_of_extension >= 0
 
     if have_extension:
-        return f"{source_file_path[:index_of_extension]}.ase"
+        return f"{source_file_path[:index_of_extension]}.{extension}"
 
-    return f"{source_file_path}.ase"
+    return f"{source_file_path}.{extension}"
 
 
 class ColorReader:
@@ -222,7 +221,7 @@ class ColorSorter:
 class ColorWriter:
     """Service for writing colors to file"""
 
-    def __init__(self, strategy: WrittingStrategy):
+    def __init__(self, strategy: WritingStrategy):
         self._strategy = strategy
 
     def write(self, colors: Tuple[Color, ...], final_file_path: str):

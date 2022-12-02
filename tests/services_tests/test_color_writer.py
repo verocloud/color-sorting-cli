@@ -4,7 +4,11 @@ from typing import Tuple
 from harmony.constants import ColorFormat
 from harmony.models import RGB, Color
 from harmony.service_layer.services import ColorWriter
-from harmony.service_layer.writting_strategies import ASEWritting, DefaultWritting
+from harmony.service_layer.writting_strategies import (
+    ASEWriting,
+    CLRWriting,
+    DefaultWriting,
+)
 from tests.helpers import get_temporary_file_path
 
 
@@ -19,7 +23,7 @@ class TestColorsWriter:
 
     def _when_colors_are_passed_writing_as_rgb(self, arrangement: Tuple[Color]) -> str:
         temporary_file = get_temporary_file_path()
-        strategy = DefaultWritting(ColorFormat.RGB)
+        strategy = DefaultWriting(ColorFormat.RGB)
         writer = ColorWriter(strategy)
 
         writer.write(arrangement, temporary_file)
@@ -50,7 +54,7 @@ class TestColorsWriter:
         self, arrangement: Tuple[Color]
     ) -> str:
         temporary_file = get_temporary_file_path()
-        strategy = DefaultWritting(ColorFormat.HEXCODE)
+        strategy = DefaultWriting(ColorFormat.HEXCODE)
         writer = ColorWriter(strategy)
 
         writer.write(arrangement, temporary_file)
@@ -81,7 +85,7 @@ class TestColorsWriter:
         self, arrangement: Tuple[Color]
     ) -> str:
         temporary_file = get_temporary_file_path()
-        strategy = DefaultWritting(ColorFormat.SAME_AS_INPUT)
+        strategy = DefaultWriting(ColorFormat.SAME_AS_INPUT)
         writer = ColorWriter(strategy)
 
         writer.write(arrangement, temporary_file)
@@ -118,7 +122,7 @@ class TestColorsWriter:
         self, arrangement: Tuple[Color]
     ) -> bytes:
         temporary_file = get_temporary_file_path(suffix=".ase")
-        strategy = ASEWritting("")
+        strategy = ASEWriting("")
         writer = ColorWriter(strategy)
 
         writer.write(arrangement, temporary_file)
@@ -135,6 +139,37 @@ class TestColorsWriter:
     def _then_should_write_to_ase_file(self, result: bytes) -> None:
         expected_color_bytes1 = b"RGB ?k\xeb\xec>t\xf4\xf5>P\xd0\xd1\x00\x02"
         expected_color_bytes2 = b"RGB >\x96\x96\x97?V\xd6\xd7><\xbc\xbd\x00\x02"
+
+        assert expected_color_bytes1 in result
+        assert expected_color_bytes2 in result
+
+    def test_write_as_clr_file(self) -> None:
+        """Test writting ".ase" file"""
+        arrangement = self._given_colors()
+        result = self._when_colors_are_passed_writting_as_clr(arrangement)
+        self._then_should_write_to_clr_file(result)
+
+    def _when_colors_are_passed_writting_as_clr(
+        self, arrangement: Tuple[Color]
+    ) -> bytes:
+        temporary_file = get_temporary_file_path(suffix=".clr")
+        strategy = CLRWriting()
+        writer = ColorWriter(strategy)
+
+        writer.write(arrangement, temporary_file)
+
+        colors_file_content: str
+
+        with open(temporary_file, "rb") as colors_file:
+            colors_file_content = colors_file.read()
+
+        os.remove(temporary_file)
+
+        return colors_file_content
+
+    def _then_should_write_to_clr_file(self, result: bytes) -> None:
+        expected_color_bytes1 = b"\x83\xec\xebk?\x83\xf5\xf4t>\x83\xd1\xd0P>\x01\x86"
+        expected_color_bytes2 = b"\x83\x97\x96\x96>\x83\xd7\xd6V?\x83\xbd\xbc<>\x01\x86"
 
         assert expected_color_bytes1 in result
         assert expected_color_bytes2 in result

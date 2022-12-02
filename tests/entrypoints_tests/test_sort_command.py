@@ -9,6 +9,8 @@ from tests.helpers import get_temporary_file_path
 
 
 class TestSortCommand:
+    """Tests for the "sort" command"""
+
     @pytest.fixture
     def runner(self) -> CliRunner:
         return CliRunner()
