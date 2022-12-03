@@ -1,4 +1,9 @@
-from importlib.metadata import version
+from importlib.metadata import PackageNotFoundError, version
 
 __app_name__ = "Harmony"
-__version__ = version(__app_name__)
+
+try:
+    __version__ = version(__app_name__)
+
+except PackageNotFoundError:
+    __version__ = "0.0.0"
