@@ -67,6 +67,10 @@ $ harmony sort color.txt
 
 ## Commands
 
+### --version
+Display the current installed version of the Harmony.
+
+
 ### sort
 
 The `sort` command sorts a text according to the [above specification](#create-a-colors-file). It receives a text file path and provides the following options:

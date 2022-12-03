@@ -1,11 +1,15 @@
 import rich
 import typer
 
+from harmony import __version__
+from harmony.adapters import CommandWithVersion
 from harmony.constants import (
     ColorFormat,
-    DefaultParameters,
     Directions,
+    SortCommandArguments,
     SortingStrategyName,
+    TXT2ASECommandArguments,
+    TXT2CLRCommandArguments,
 )
 from harmony.service_layer.services import (
     ColorReader,
@@ -21,16 +25,16 @@ from harmony.service_layer.writting_strategies import (
     WritingStrategy,
 )
 
-app = typer.Typer(pretty_exceptions_show_locals=False)
+app = typer.Typer(pretty_exceptions_show_locals=False, rich_markup_mode="markdown")
 
 
-@app.command()
+@CommandWithVersion(app)
 def sort(
-    colors_file: typer.FileText,
-    sorting_algorithm: SortingStrategyName = "hillbert",  # type: ignore
-    direction: Directions = "forward",  # type: ignore
-    color_format: ColorFormat = "input",  # type: ignore
-    suffix: str = "_sorted",
+    colors_file: typer.FileText = SortCommandArguments.colors_file,
+    sorting_algorithm: SortingStrategyName = SortCommandArguments.sorting_algorithm,
+    direction: Directions = SortCommandArguments.direction,
+    color_format: ColorFormat = SortCommandArguments.color_format,
+    suffix: str = SortCommandArguments.suffix,
 ) -> None:
     """Entry point for generating a file with the sorted colors"""
     try:
@@ -72,10 +76,10 @@ def convert_txt_file(colors_file: typer.FileText, writing_strategy: WritingStrat
     rich.print(f"[green]File converted and saved to {final_path}")
 
 
-@app.command()
+@CommandWithVersion(app)
 def txt2ase(
-    colors_file: typer.FileText,
-    palette_name: str = DefaultParameters.PALETTE_NAME.value,
+    colors_file: typer.FileText = TXT2ASECommandArguments.colors_file,
+    palette_name: str = TXT2ASECommandArguments.palette_name,
 ):
     """Command to convert a text file into a ".ase" file"""
     try:
@@ -87,8 +91,8 @@ def txt2ase(
         raise typer.Exit(code=1)
 
 
-@app.command()
-def txt2clr(colors_file: typer.FileText):
+@CommandWithVersion(app)
+def txt2clr(colors_file: typer.FileText = TXT2CLRCommandArguments.colors_file):
     """Command to convert a text file into a ".clr" file"""
     try:
         writing_strategy = CLRWriting()
@@ -97,6 +101,24 @@ def txt2clr(colors_file: typer.FileText):
     except Exception as exception:
         rich.print(f"[bright_red] ERROR: {exception}")
         raise typer.Exit(code=1)
+
+
+def _display_version(context: typer.Context):
+    if context.invoked_subcommand:
+        rich.print(
+            "[bright_red] ERROR: parameter --version not compatible with other "
+            + "commands"
+        )
+        raise typer.Exit(code=1)
+
+    rich.print(f"Harmony {__version__}")
+
+
+@app.callback(invoke_without_command=True)
+def main(context: typer.Context, version: bool = False):
+    """Harmony is a CLI that provides tools for managing colors"""
+    if version:
+        _display_version(context)
 
 
 if __name__ == "__main__":
