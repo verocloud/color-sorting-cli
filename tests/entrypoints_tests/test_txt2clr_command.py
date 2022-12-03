@@ -8,7 +8,7 @@ from harmony.main import app
 from tests.helpers import get_temporary_file_path
 
 
-class TestSortCommand:
+class TestTXT2CLRCommand:
     """Tests for the "txt2clr" command"""
 
     @pytest.fixture
