@@ -5,15 +5,14 @@ from dataclasses import dataclass
 from typing import List, Tuple
 
 TOTAL_WIDTH = 1000
-FILE_PATH = "colors_file_hsl_sorted.txt"
 AMOUNT_OF_COLORS = 6
 
 
-def get_colors_file():
+def get_colors_file(file_name: str):
     this_directory_path = os.path.dirname(__file__)
     this_directory_absolute_path = os.path.abspath(this_directory_path)
 
-    return os.path.join(this_directory_absolute_path, FILE_PATH)
+    return os.path.join(this_directory_absolute_path, file_name)
 
 
 @dataclass
@@ -24,10 +23,10 @@ class ColorSliceData:
 
 
 class ColorSliceSetFactory:
-    def make_set(
-        self, colors_file_path: str = get_colors_file()
-    ) -> Tuple[ColorSliceData, ...]:
+    def make_set(self, colors_file_name: str) -> Tuple[ColorSliceData, ...]:
         color_strings: List[str] = []
+
+        colors_file_path = get_colors_file(colors_file_name)
 
         with open(colors_file_path, "r", encoding="utf8") as colors_file:
             color_strings = colors_file.readlines()
@@ -55,11 +54,16 @@ class ColorSliceSetFactory:
 
 
 class ColorSpectrum(Canvas):
-    def __init__(self, master: Misc, **kwargs: object) -> None:
+    def __init__(
+        self,
+        master: Misc,
+        colors_file_name: str,
+        **kwargs: object,
+    ) -> None:
         super().__init__(master=master, cnf={}, **kwargs)
 
         factory = ColorSliceSetFactory()
-        color_slices = factory.make_set()
+        color_slices = factory.make_set(colors_file_name)
 
         for slice in color_slices:
             self.create_rectangle(
@@ -75,15 +79,25 @@ class ColorSpectrum(Canvas):
 class Application(Tk):
     """Main application"""
 
-    def __init__(self) -> None:
+    def __init__(self, colors_file_name: str) -> None:
         super().__init__(className=str(self.__class__))
         self.title("Color Visualization")
         self.geometry(f"{TOTAL_WIDTH}x100")
 
-        color_spectrum = ColorSpectrum(self, width=TOTAL_WIDTH)
+        color_spectrum = ColorSpectrum(
+            self, colors_file_name=colors_file_name, width=TOTAL_WIDTH
+        )
         color_spectrum.pack()
 
 
 if __name__ == "__main__":
-    app = Application()
+    colors_file_name = "colors_hillbert_sorted.txt"
+
+    passed_arguments = sys.argv
+    arguments_was_passed = len(passed_arguments) > 1
+
+    if arguments_was_passed:
+        colors_file_name = passed_arguments[1]
+
+    app = Application(colors_file_name)
     app.mainloop()

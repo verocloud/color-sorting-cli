@@ -1,6 +1,0 @@
-(123, 176, 102) banana
-(63, 202, 5) apple
-(178, 180, 162) peter parker
-(106, 197, 131) something
-(196, 175, 47) something 2
-(163, 81, 186) something 3

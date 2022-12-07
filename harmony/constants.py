@@ -50,17 +50,26 @@ class SortCommandArguments:
     colors_file: typer.FileText = typer.Argument(
         ..., help="File with the colors to be sorted"
     )
-    sorting_algorithm: SortingStrategyName = typer.Argument(
-        "hillbert", help="Algorithm to be used for sorting the colors"
+    sorting_algorithm: SortingStrategyName = typer.Option(
+        "hillbert",
+        "--sorting-algorithm",
+        "-a",
+        help="Algorithm to be used for sorting the colors",
     )
-    direction: Directions = typer.Argument(
-        "forward", help="If the colors will be sorted forward or backward"
+    direction: Directions = typer.Option(
+        "forward",
+        "--direction",
+        "-d",
+        help="If the colors will be sorted forward or backward",
     )
-    color_format: ColorFormat = typer.Argument(
-        "input", help="The format the colors will be written in the output file"
+    color_format: ColorFormat = typer.Option(
+        "input",
+        "--color-format",
+        "-f",
+        help="The format the colors will be written in the output file",
     )
-    suffix: str = typer.Argument(
-        "_sorted", help="Suffix to add to the name of the output file"
+    suffix: str = typer.Option(
+        "_sorted", "--suffix", "-s", help="Suffix to add to the name of the output file"
     )
 
 
@@ -70,8 +79,10 @@ class TXT2ASECommandArguments:
     colors_file: typer.FileText = typer.Argument(
         ..., help="File with the colors to be sorted"
     )
-    palette_name: str = typer.Argument(
+    palette_name: str = typer.Option(
         DefaultParameters.PALETTE_NAME,
+        "--palette-name",
+        "-n",
         help='Name of the palette to be written in to the ".ase" file',
     )
 
@@ -87,6 +98,9 @@ class TXT2CLRCommandArguments:
 class MainArguments:
     """Store the core arguments"""
 
-    version: bool = typer.Argument(
-        False, help="Display the current installed version of the CLI"
+    version: bool = typer.Option(
+        False,
+        "--version",
+        "-V",
+        help="Display the current installed version of the CLI",
     )
