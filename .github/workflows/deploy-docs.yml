@@ -27,7 +27,9 @@ jobs:
     
     steps:
       - name: Build Sphinx
-        run: sphinx-build ./source ./build -b html
+        run: |
+          apt-get install python3-sphinx
+          sphinx-build ./source ./build -b html
         
   deploy:
     needs: build
