@@ -26,10 +26,11 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Build Sphinx
         run: |
           sudo apt-get install python3-sphinx
-          ls
           sphinx-build ./source ./build -b html
         
   deploy:
@@ -39,8 +40,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Upload artifact
