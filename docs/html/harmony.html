@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Harmony &#8212; Harmony December 2022 (version 0.4.2) documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Color Palette File Specification" href="colors-file-specification.html" />
+    <link rel="prev" title="Welcome to Harmony’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="harmony">
+<h1>Harmony<a class="headerlink" href="#harmony" title="Permalink to this heading">¶</a></h1>
+<p><em>Easily organize your color pallete</em></p>
+<hr class="docutils" />
+<p>Harmony is a CLI that provides multiple tools for managing you color palettes.</p>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Python 3.8+</p></li>
+</ul>
+<p>Built over:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://typer.tiangolo.com/">typer</a></p></li>
+<li><p><a class="reference external" href="https://rich.readthedocs.io/en/latest/">rich</a></p></li>
+</ul>
+</section>
+<section id="installing">
+<h2>Installing<a class="headerlink" href="#installing" title="Permalink to this heading">¶</a></h2>
+<p>For installing the CLI, you can download the <cite>.whl</cite> file from <a class="reference external" href="https://github.com/AdrianSimionov/color-sorting-cli/releases/download/0.4.2/harmony-0.4.2-py3-none-any.whl">here</a> and run the following command:</p>
+<ul>
+<li><p>On Windows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install --user harmony-{version}-py3-none-any.whl
+
+---&gt; 100%
+</pre></div>
+</div>
+</li>
+<li><p>On Linux:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip3 install --user harmony-{version}-py3-none-any.whl
+
+---&gt; 100%
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="example-sorting-a-color-palette">
+<h2>Example - Sorting a color palette<a class="headerlink" href="#example-sorting-a-color-palette" title="Permalink to this heading">¶</a></h2>
+<section id="create-a-colors-file">
+<h3>Create a colors file<a class="headerlink" href="#create-a-colors-file" title="Permalink to this heading">¶</a></h3>
+<blockquote>
+<div><ul>
+<li><p>The first step is to write the colors in a file called <code class="docutils literal notranslate"><span class="pre">colors.txt</span></code> (for the file specification, see <a class="reference internal" href="colors-file-specification.html#file-specification"><span class="std std-ref">Color Palette File Specification</span></a>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">49</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">210</span><span class="p">)</span> <span class="n">Dark</span> <span class="n">Blue</span>
+<span class="c1">#0f8fb3 Light Blue</span>
+<span class="p">(</span><span class="mi">201</span><span class="p">,</span> <span class="mi">118</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="n">Orange</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+</section>
+<section id="sort-the-colors">
+<h3>Sort the colors<a class="headerlink" href="#sort-the-colors" title="Permalink to this heading">¶</a></h3>
+<ul>
+<li><p>Now we will run the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ harmony sort color.txt
+</pre></div>
+</div>
+</li>
+<li><p>After that, a file named <cite>colors_hillbert_sorted.txt</cite> should be generated in the same directory with the following content:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">201</span><span class="p">,</span> <span class="mi">118</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="n">Orange</span>
+<span class="c1">#0f8fb3 Light Blue</span>
+<span class="p">(</span><span class="mi">49</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">210</span><span class="p">)</span> <span class="n">Dark</span> <span class="n">Blue</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Harmony</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#installing">Installing</a></li>
+<li><a class="reference internal" href="#example-sorting-a-color-palette">Example - Sorting a color palette</a><ul>
+<li><a class="reference internal" href="#create-a-colors-file">Create a colors file</a></li>
+<li><a class="reference internal" href="#sort-the-colors">Sort the colors</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to Harmony’s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="colors-file-specification.html"
+                        title="next chapter">Color Palette File Specification</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Lucas Calegario.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/harmony.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

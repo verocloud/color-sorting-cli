@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Color Palette File Specification &#8212; Harmony December 2022 (version 0.4.2) documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Commands" href="commands/index.html" />
+    <link rel="prev" title="Harmony" href="harmony.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="color-palette-file-specification">
+<span id="file-specification"></span><h1>Color Palette File Specification<a class="headerlink" href="#color-palette-file-specification" title="Permalink to this heading">¶</a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
+<p>Most of the commands of Harmony receives the colors through a special text file. this tutorial shows how to write colors in this file.</p>
+</section>
+<section id="the-colors">
+<h2>The Colors<a class="headerlink" href="#the-colors" title="Permalink to this heading">¶</a></h2>
+<p>To pass colors to the file, all you need to do is pass the hexcode or the RGB format in to it. Every color must be in a separated line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">49</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">210</span><span class="p">)</span>
+<span class="c1">#0f8fb3</span>
+<span class="p">(</span><span class="mi">201</span><span class="p">,</span> <span class="mi">118</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>RGB format must be written in the format <code class="docutils literal notranslate"><span class="pre">(X,</span> <span class="pre">X,</span> <span class="pre">X)</span></code> being <code class="docutils literal notranslate"><span class="pre">d</span></code> the components red, green and blue as an integer from 0 to 255. The hexcode format must be in the format <code class="docutils literal notranslate"><span class="pre">#XXXXXX</span></code> or <code class="docutils literal notranslate"><span class="pre">#XXX</span></code> being <code class="docutils literal notranslate"><span class="pre">X</span></code> the components red, green and blue as hex digits.</p>
+</section>
+<section id="labels">
+<h2>Labels<a class="headerlink" href="#labels" title="Permalink to this heading">¶</a></h2>
+<p>Being to facilitate the reading or to generate files as <cite>.clr</cite> and <cite>.ase</cite>, you can add labels to the colors. For that just write it after the color spefication, separated by a whitespace:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">49</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">210</span><span class="p">)</span> <span class="n">Dark</span> <span class="n">Blue</span>
+<span class="c1">#0f8fb3 Light Blue</span>
+<span class="p">(</span><span class="mi">201</span><span class="p">,</span> <span class="mi">118</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="n">Orange</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Color Palette File Specification</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#the-colors">The Colors</a></li>
+<li><a class="reference internal" href="#labels">Labels</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="harmony.html"
+                        title="previous chapter">Harmony</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="commands/index.html"
+                        title="next chapter">Commands</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Lucas Calegario.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/colors-file-specification.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
