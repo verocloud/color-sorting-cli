@@ -65,50 +65,6 @@ $ harmony sort color.txt
 ```
 
 
-## Commands
+## More Information
 
-### --version
-Display the current installed version of the Harmony.
-
-
-### sort
-
-The `sort` command sorts a text according to the [above specification](#create-a-colors-file). It receives a text file path and provides the following options:
-
-* --sorting-algorithm [default: hillbert]: determine which algorithm should be used to sort the colors:
-  * rgb: Sort the colors based on their RGB values;
-  * hsv: Sort the colors based on their HSV values;
-  * hsl: Sort the colors based on their HSL values;
-  * luminosity: Sort the colors based on their perceived luminosity;
-  * step: Sort the colors based on their hue, luminosity and *value* splitting them in 8 steps and sorting them separately;
-  * step-alternated: Same as step, but the luminosity step is alternated forward and backward, bringing a sensation of continuity;
-  * hillbert: Sort the colors based on their proximity in Hillbert Curves calculated on top of the RGB values;
-
-* --color-format [default: input]: determine which format to output the colors:
-  * input: The output format will be the same as the input format;
-  * rgb: The output for all colors will be in RGB format;
-  * hexcode: The output for all colors will be in Hexcode format;
-
-* --direction [default: backward]: determine the direction of the sorting:
-  * forward: the colors will be sorted in the natural order of the algorithms
-  * backward: the colors will be sorted in the reversed order of the algorithms
-
-* --suffix [default: _sorted]: determine the suffix of the output file;
-
-* --help: display the options and information about the command;
-
-
-### txt2ase
-
-`txt2ase` command allow to convert a text file that follows the [above specification](#create-a-colors-file) to a `.ase` file. It receives a text file and provide the following options:
-
-* --palette_name [default: Palette {UUID4} sorted by Harmony]: determine the name of the palette to be written to the `.ase` file;
-
-* --help: display the options and information about the command;
-
-
-### txt2ase
-
-`txt2clr` command allow to convert a text file that follows the [above specification](#create-a-colors-file) to a `.clr` file. It receives a text file and provide the following options:
-
-* --help: display the information about the command;
+For more information on how to use the Harmony, check the [full documentation](https://xlurio.github.io/harmony-docs/).
