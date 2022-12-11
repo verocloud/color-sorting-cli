@@ -29,6 +29,7 @@ jobs:
       - name: Build Sphinx
         run: |
           sudo apt-get install python3-sphinx
+          ls
           sphinx-build ./source ./build -b html
         
   deploy:
