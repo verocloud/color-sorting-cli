@@ -59,6 +59,10 @@ Options
 
     Default\: Palette ``ID generated with the uuid4 algorithm`` sorted by harmony. The name of the palette to be written to the ``.ase`` file.
 
+    .. versionchanged:: 0.4.2
+
+        Added short name ``-n``.
+
     #######
     Example
     #######
@@ -79,12 +83,6 @@ Options
     And we generate a file ``colors.ase`` with the given palette name [#paletteImporter]_:
 
     .. image:: ../_static/images/txt2ase-1.png
-
-    
-
-.. versionchanged:: 0.4.2
-
-    Added short name ``-n``.
 
 
 .. option:: --help

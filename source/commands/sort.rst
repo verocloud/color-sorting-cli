@@ -71,6 +71,10 @@ Options
     * step-alternated: Same as step, but the luminosity step is alternated forward and backward, bringing a sensation of continuity;
     * hillbert: Sort the colors based on their proximity in Hillbert Curves calculated on top of the RGB values;
 
+    .. versionchanged:: 0.4.2
+
+        Added short name ``-a``.
+
     #######
     Example
     #######
@@ -106,17 +110,20 @@ Options
     .. image:: ../_static/images/sort-2.png
 
 
-.. versionchanged:: 0.4.2
-
-    Added short name ``-a``.
-
-
 .. option:: --direction <direction>, -d <direction>
 
     Default\: forward. Determine if the colors will be sorted in its natural order or in reverse:
     
     * forward: the colors will be sorted in its natural order
     * backward: the colors will be sorted in reverse
+
+    .. versionadded:: 0.2.0
+
+        Added ``--direction`` option;
+
+    .. versionchanged:: 0.4.2
+
+        Added short name ``-d``.
 
     #######
     Example
@@ -169,14 +176,6 @@ Options
 
     .. image:: ../_static/images/sort-4.png
 
-.. versionadded:: 0.2.0
-
-    Added ``--direction`` option;
-
-.. versionchanged:: 0.4.2
-
-    Added short name ``-d``.
-
 
 .. option:: --color-format <format>, -f <format>
 
@@ -185,6 +184,10 @@ Options
     * input: The output format will be the same as the input format;
     * rgb: The output for all colors will be in RGB format;
     * hexcode: The output for all colors will be in Hexcode format;
+
+    .. versionchanged:: 0.4.2
+
+        Added short name ``-f``.
 
     #######
     Example
@@ -225,18 +228,18 @@ Options
         (15, 143, 179) Light Blue
         (49, 6, 210) Dark Blue
 
-.. versionchanged:: 0.4.2
-
-    Added short name ``-f``.
-
 
 .. option:: --suffix <suffix>, -s <suffix>
 
     Default\: _sorted. The suffix to be append to the file's name.
 
-.. versionchanged:: 0.4.2
+    .. versionchanged:: 0.4.2
 
-    Added short name ``-s``.
+        Added short name ``-s``.
+
+    #######
+    Example
+    #######
 
     Given the file ``colors.txt`` with the following content (see :ref:`file_specification`)::
 
