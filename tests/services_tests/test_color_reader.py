@@ -84,3 +84,24 @@ class TestColorReader:
     def _then_should_raise_invalid_color(self, result: Callable[[], None]):
         with pytest.raises(InvalidColorException):
             result()
+
+    def test_extract_from_file_without_color_names(self) -> None:
+        """Test generating names for the colors in a file"""
+        arrangement = self._given_file_without_color_names()
+        result = self._when_file_is_passed(arrangement)
+        self._then_should_give_names_to_colors(result)
+
+    def _given_file_without_color_names(self) -> str:
+        temporary_file_path = get_temporary_file_path()
+
+        with open(temporary_file_path, "w", encoding="utf8") as colors_file:
+            colors_file.write("(255, 0, 0)\n" + "#0500A5\n" + "(219, 0, 76)")
+
+        return temporary_file_path
+
+    def _then_should_give_names_to_colors(self, result: List[Color]) -> None:
+        expected_color_names = ["Red", "New Midnight Blue", "Razzmatazz"]
+        actual_color_names = [color.description for color in result]
+
+        for expected_name in expected_color_names:
+            assert expected_name in actual_color_names

@@ -4,11 +4,12 @@ import random
 AMOUNT_OF_COLORS = 6
 file_content: str = ""
 
+MAXIMUM_RGB_VALUE = 255
 
 for line in range(AMOUNT_OF_COLORS):
-    red = random.randint(0, 255)
-    green = random.randint(0, 255)
-    blue = random.randint(0, 255)
+    red = random.randint(0, MAXIMUM_RGB_VALUE)
+    green = random.randint(0, MAXIMUM_RGB_VALUE)
+    blue = random.randint(0, MAXIMUM_RGB_VALUE)
 
     file_content += f"({red}, {green}, {blue})\n"
 

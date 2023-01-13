@@ -29,9 +29,7 @@ class ColorSliceSetFactory:
         colors_file_path = get_colors_file(colors_file_name)
 
         with open(colors_file_path, "r", encoding="utf8") as colors_file:
-            color_strings = colors_file.readlines()
-
-        return self._get_color_slices(color_strings)
+            return self._get_color_slices(colors_file.readlines())
 
     def _get_color_slices(self, color_strings: List[str]) -> Tuple[ColorSliceData, ...]:
         color_slices: List[ColorSliceData] = list()

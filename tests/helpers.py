@@ -1,4 +1,12 @@
 import tempfile
+from numbers import Number
+from typing import Tuple
+
+from tests import constants
+
+
+def _get_temporary_file(**kwargs) -> Tuple[int, str]:
+    return tempfile.mkstemp(**kwargs)
 
 
 def get_temporary_file_path(**kwargs: object) -> str:
@@ -7,7 +15,28 @@ def get_temporary_file_path(**kwargs: object) -> str:
     Returns:
         str: the path to the temporary file
     """
-    ABSOLUTE_PATH: int = 1
-    temporary_file = tempfile.mkstemp(**kwargs)
+    return _get_temporary_file(**kwargs)[constants.MKSTEMP_ABSOLUTE_PATH_INDEX]
 
-    return temporary_file[ABSOLUTE_PATH]
+
+def _difference_between(expected_number: Number, actual_number: Number) -> Number:
+    return expected_number - actual_number
+
+
+def _absolute_difference_between(
+    expected_number: Number, actual_number: Number
+) -> Number:
+    return abs(_difference_between(expected_number, actual_number))
+
+
+def assert_real_numbers_are_equal(
+    expected_number: float, actual_number: float, tolerance=10 ^ (-7)
+) -> None:
+    """Raises AssertionError if numbers aren't equal
+
+    Args:
+        first_number (float): first number to be compared
+        second_number (float): second number to be compared
+    """
+    assert (
+        _absolute_difference_between(expected_number, actual_number) < tolerance
+    ), f"Expected {expected_number}, got {actual_number}"

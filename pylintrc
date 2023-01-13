@@ -1,0 +1,20 @@
+[MESSAGE CONTROL]
+
+disable=broad-except,
+        missing-module-docstring,
+        too-few-public-methods,
+
+[BASIC]
+no-docstring-rgx=(^_|^close$)
+
+[DESIGN]
+max-args=3
+max-bool-expr=1
+max-branches=2
+max-locals=4
+max-parents=3
+max-returns=2
+
+[FORMAT]
+max-line-length=88
+max-module-lines=250
