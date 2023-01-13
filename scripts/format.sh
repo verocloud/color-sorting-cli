@@ -1,6 +1,6 @@
 #! /bin/bash
 
-./venv/bin/pip install autoflake black isort
-./venv/bin/autoflake --remove-all-unused-imports --recursive --remove-unused-variables --in-place harmony tests --exclude=__init__.py
+./venv/bin/pip install ruff black isort
+./venv/bin/ruff harmony tests --fix
 ./venv/bin/black harmony tests
 ./venv/bin/isort harmony tests --profile black

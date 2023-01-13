@@ -3,12 +3,10 @@ from typing import Tuple
 
 from harmony.constants import ColorFormat
 from harmony.models import RGB, Color
+from harmony.service_layer.ase_writting import ASEWriting
+from harmony.service_layer.clr_writting import CLRWriting
 from harmony.service_layer.services import ColorWriter
-from harmony.service_layer.writting_strategies import (
-    ASEWriting,
-    CLRWriting,
-    DefaultWriting,
-)
+from harmony.service_layer.writting_strategies import DefaultWriting
 from tests.helpers import get_temporary_file_path
 
 

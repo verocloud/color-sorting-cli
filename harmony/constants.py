@@ -3,11 +3,23 @@ from enum import Enum
 
 import typer
 
+MAXIMUM_RGB_VALUE = 255
+MAXIMUM_HUE_VALUE = 360
+MAXIMUM_8_BIT_INTEGER_VALUE = 255
+
+
+class Resources:
+    """Constants for the package resources"""
+
+    COLOR_NAMES_CSV = "color-names.csv"
+    SQLITE_DATABASE = "db.sqlite3"
+
 
 class DefaultParameters:
     """Constants for the default subjective parameters"""
 
     PALETTE_NAME: str = f"Palette {uuid.uuid4()} sorted by Harmony"
+    SUFFIX: str = "_sorted"
 
 
 class ColorFormat(str, Enum):
@@ -51,47 +63,64 @@ class SortCommandArguments:
         ..., help="File with the colors to be sorted"
     )
     sorting_algorithm: SortingStrategyName = typer.Option(
-        "hillbert",
+        SortingStrategyName.HILLBERT.value,
         "--sorting-algorithm",
         "-a",
         help="Algorithm to be used for sorting the colors",
     )
     direction: Directions = typer.Option(
-        "forward",
+        Directions.FORWARD.value,
         "--direction",
         "-d",
         help="If the colors will be sorted forward or backward",
     )
     color_format: ColorFormat = typer.Option(
-        "input",
+        ColorFormat.SAME_AS_INPUT.value,
         "--color-format",
         "-f",
         help="The format the colors will be written in the output file",
     )
     suffix: str = typer.Option(
-        "_sorted", "--suffix", "-s", help="Suffix to add to the name of the output file"
+        DefaultParameters.SUFFIX,
+        "--suffix",
+        "-s",
+        help="Suffix to add to the name of the output file",
+    )
+    generate_names: bool = typer.Option(
+        True,
+        "--no-generate-color-names",
+        "-G",
+        help="Disables the color name generation for the unlabelled colors.",
     )
 
 
 class TXT2ASECommandArguments:
     """Store the "txt2ase" command arguments"""
 
-    colors_file: typer.FileText = typer.Argument(
-        ..., help="File with the colors to be sorted"
-    )
+    colors_file: typer.FileText = typer.Argument(..., help="File to be converted")
     palette_name: str = typer.Option(
         DefaultParameters.PALETTE_NAME,
         "--palette-name",
         "-n",
         help='Name of the palette to be written in to the ".ase" file',
     )
+    generate_names: bool = typer.Option(
+        True,
+        "--no-generate-color-names",
+        "-G",
+        help="Disables the color name generation for the unlabelled colors.",
+    )
 
 
 class TXT2CLRCommandArguments:
     """Store the "txt2clr" command arguments"""
 
-    colors_file: typer.FileText = typer.Argument(
-        ..., help="File with the colors to be sorted"
+    colors_file: typer.FileText = typer.Argument(..., help="File to be converted")
+    generate_names: bool = typer.Option(
+        True,
+        "--no-generate-color-names",
+        "-G",
+        help="Disables the color name generation for the unlabelled colors.",
     )
 
 
@@ -104,3 +133,22 @@ class MainArguments:
         "-V",
         help="Display the current installed version of the CLI",
     )
+
+
+class TableNames:
+    """Constants for the database tables names"""
+
+    COLOR_NAME = "namegeneration_colorname"
+
+
+class QueryConstants:
+    """Constants for query sintax elements"""
+
+    ALL_COLUMNS = ["*"]
+
+
+class FloatComparisonTolerance(float, Enum):
+    """Constants for tolerance on float comparison"""
+
+    THREE_DECIMAL_PLACES = 10 ** (-3)
+    SEVEN_DECIMAL_PLACES = 10 ** (-7)

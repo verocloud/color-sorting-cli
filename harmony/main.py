@@ -1,3 +1,6 @@
+# pylint: disable=too-many-locals,too-many-arguments
+from typing import TextIO, Tuple
+
 import rich
 import typer
 
@@ -11,6 +14,9 @@ from harmony.constants import (
     TXT2ASECommandArguments,
     TXT2CLRCommandArguments,
 )
+from harmony.models import Color
+from harmony.service_layer.ase_writting import ASEWriting
+from harmony.service_layer.clr_writting import CLRWriting
 from harmony.service_layer.services import (
     ColorReader,
     ColorSorter,
@@ -18,12 +24,7 @@ from harmony.service_layer.services import (
     get_final_file_path,
     get_path_with_extension,
 )
-from harmony.service_layer.writting_strategies import (
-    ASEWriting,
-    CLRWriting,
-    DefaultWriting,
-    WritingStrategy,
-)
+from harmony.service_layer.writting_strategies import DefaultWriting, WritingStrategy
 
 app = typer.Typer(pretty_exceptions_show_locals=False, rich_markup_mode="markdown")
 
@@ -35,19 +36,15 @@ def sort(
     direction: Directions = SortCommandArguments.direction,
     color_format: ColorFormat = SortCommandArguments.color_format,
     suffix: str = SortCommandArguments.suffix,
+    generate_names: bool = SortCommandArguments.generate_names,
 ) -> None:
     """Entry point for generating a file with the sorted colors"""
     try:
-        reader = ColorReader()
-        sorter = ColorSorter(sorting_algorithm)
-        writting_strategy = DefaultWriting(color_format)
-        writer = ColorWriter(writting_strategy)
-
-        colors = reader.extract_from_file(colors_file)
-        sorted_colors = sorter.sort(colors, direction)
+        colors = ColorReader(generate_names).extract_from_file(colors_file)
+        sorted_colors = ColorSorter(sorting_algorithm).sort(colors, direction)
 
         final_file_path = get_final_file_path(colors_file, sorting_algorithm, suffix)
-        writer.write(sorted_colors, final_file_path)
+        ColorWriter(DefaultWriting(color_format)).write(sorted_colors, final_file_path)
 
         rich.print(f"[green]Colors sorted and saved to {final_file_path}")
 
@@ -56,35 +53,43 @@ def sort(
         raise typer.Exit(code=1)
 
 
-def convert_txt_file(colors_file: typer.FileText, writing_strategy: WritingStrategy):
+def _get_colors_tuple_for_convertion(
+    must_generate_color_names: bool, colors_file: TextIO
+) -> Tuple[Color, ...]:
+    return tuple(ColorReader(must_generate_color_names).extract_from_file(colors_file))
+
+
+def convert_txt_file(
+    colors_file: typer.FileText,
+    writing_strategy: WritingStrategy,
+    must_generate_color_names: bool,
+):
     """Convert the text file using the passed writing strategy
 
     Args:
         colors_file (typer.FileText): file to be converted
         writing_strategy (WritingStrategy): strategy to use when writing the new file
     """
+    ColorWriter(writing_strategy).write(
+        _get_colors_tuple_for_convertion(must_generate_color_names, colors_file),
+        get_path_with_extension(colors_file, writing_strategy.EXTENSION),
+    )
 
-    reader = ColorReader()
-    writer = ColorWriter(writing_strategy)
-
-    colors_list = reader.extract_from_file(colors_file)
-    colors = tuple(colors_list)
-
-    final_path = get_path_with_extension(colors_file, writing_strategy.EXTENSION)
-    writer.write(colors, final_path)
-
-    rich.print(f"[green]File converted and saved to {final_path}")
+    rich.print(
+        "[green]File converted and saved to "
+        + get_path_with_extension(colors_file, writing_strategy.EXTENSION)
+    )
 
 
 @CommandWithVersion(app)
 def txt2ase(
     colors_file: typer.FileText = TXT2ASECommandArguments.colors_file,
     palette_name: str = TXT2ASECommandArguments.palette_name,
+    generate_names: bool = TXT2ASECommandArguments.generate_names,
 ):
     """Command to convert a text file into a ".ase" file"""
     try:
-        writing_strategy = ASEWriting(palette_name)
-        convert_txt_file(colors_file, writing_strategy)
+        convert_txt_file(colors_file, ASEWriting(palette_name), generate_names)
 
     except Exception as exception:
         rich.print(f"[bright_red] ERROR: {exception}")
@@ -92,11 +97,13 @@ def txt2ase(
 
 
 @CommandWithVersion(app)
-def txt2clr(colors_file: typer.FileText = TXT2CLRCommandArguments.colors_file):
+def txt2clr(
+    colors_file: typer.FileText = TXT2CLRCommandArguments.colors_file,
+    generate_names: bool = TXT2CLRCommandArguments.generate_names,
+):
     """Command to convert a text file into a ".clr" file"""
     try:
-        writing_strategy = CLRWriting()
-        convert_txt_file(colors_file, writing_strategy)
+        convert_txt_file(colors_file, CLRWriting(), generate_names)
 
     except Exception as exception:
         rich.print(f"[bright_red] ERROR: {exception}")
